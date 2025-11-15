@@ -5,9 +5,11 @@ import Image from "next/image";
 
 const Header = () => {
     return ( 
-        <Card>
-            <CardContent className="flex flex-row justify-between items-center p-3">
-                <Image src="/gustavo_dev.png" alt="Logo" className="h-18" width={150} height={18} />
+        <Card className="h-24 ">
+            <CardContent className="flex flex-row justify-between items-center h-full px-4 py-0">
+                <div className="flex h-full items-center">
+                    <Image src="/canva.png" alt="Logo" width={150} height={80} className="h-25 w-auto object-contain" />
+                </div>
                 <Button size="icon" variant="outline">
                     <MenuIcon />
                 </Button>
