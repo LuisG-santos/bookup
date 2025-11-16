@@ -8,7 +8,14 @@ const Header = () => {
         <Card className="h-24 ">
             <CardContent className="flex flex-row justify-between items-center h-full px-4 py-0">
                 <div className="flex h-full items-center">
-                    <Image src="/canva.png" alt="Logo" width={150} height={80} className="h-25 w-auto object-contain" />
+                    <Image
+                        src="/logo.svg"
+                        alt="Logo"
+                        width={120}
+                        height={32}
+                        className="h-12 w-auto object-contain"
+                        priority
+                    />
                 </div>
                 <Button size="icon" variant="outline">
                     <MenuIcon />

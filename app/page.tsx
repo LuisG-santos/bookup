@@ -2,15 +2,24 @@ import Image from "next/image";
 import { Button } from "./_components/ui/button";
 import Header from "./_components/header";
 import { Input } from "./_components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { FootprintsIcon, SearchIcon } from "lucide-react";
 import { Badge } from "./_components/ui/badge";
 import { Card, CardContent } from "./_components/ui/card";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { ClientBanner } from "@/app/_components/ui/banner";
 import { db } from "./_lib/prisma";
+import ServiesGrid from "./_components/ui/ServicesGrid";
+import ServicesGrid from "./_components/ui/ServicesGrid";
+
 
 export default async function Home() {
-  const services= await db.service.findMany({});
+  const service= await db.services.findMany({});
+  const popularServices = await db.services.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  });
+  
   return ( 
     <div>
       <Header />
@@ -26,9 +35,33 @@ export default async function Home() {
           </Button>
         </div>
 
+        <div className=" flex gap-2 mt-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          <Button className="gap-2" variant="secondary">
+            <Image src="/scissors.svg" width={16} height={16} alt="cabelo" className=""/>
+            Cabelo
+          </Button>
+
+           <Button className="gap-2" variant="secondary">
+            <Image src="/mustache-svgrepo-com.svg" width={16} height={16} alt="cabelo" className=""/>
+            Barba
+          </Button>
+
+           <Button className="gap-2" variant="secondary">
+            <Image src="/razor-blade-svgrepo-com (1).svg" width={16} height={16} alt="cabelo" className=""/>
+            Acabamento
+          </Button>
+
+          <Button className="gap-2" variant="secondary">
+            <FootprintsIcon className="w-4 h-4"/>
+            Pézinho
+          </Button>
+          
+        </div>
+
         <ClientBanner className="mt-6"/>
 
         <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Agendamentos</h2>
+
         <div>
           <Card className="mt-6 p-3">
             <CardContent className="flex justify-between p-0 "> 
@@ -39,7 +72,7 @@ export default async function Home() {
                 <h3 className="font-semibold">Sistema Saas</h3>
 
                 <div className="flex items-center gap-3">
-                  <Avatar className="w-10 h-10 rounded-full bg-gray-100"> 
+                  <Avatar className="w-9 h-9 rounded-full bg-gray-100"> 
                     <AvatarImage src="/cc.png" alt="Avatar" className="rounded-3xl" />
                   </Avatar>
                   <p className="text-sm">Gustavo dev</p>
@@ -59,9 +92,29 @@ export default async function Home() {
 
           </Card>
         </div>
+
+        <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Serviços Disponiveis</h2>
+
+        <div className="grid grid-cols-2 gap-4 md:flex md:overflow-x-auto md:gap-6 overflow-auto [&::-webkit-scrollbar]:hidden">
+          
+          {popularServices.map((service) => <ServicesGrid services={service} key={service.id} />)}
+
+        </div>
         
       </div>
-      
+
+      <footer>
+        <Card className="py-1 px-2">
+          <CardContent className="px-5 py-6">
+
+            <p className="text-sm text-gray-400">
+              © 2025 <span className="font-bold">Belivio</span>. Todos os direitos reservados.
+            </p>
+           
+          </CardContent>
+        </Card>
+      </footer>
+        
     </div>
   );
 }
