@@ -13,7 +13,15 @@ const Header = () => {
                         alt="Logo"
                         width={120}
                         height={32}
-                        className="h-12 w-auto object-contain"
+                        className="h-12 w-auto object-contain block md:hidden"
+                        priority
+                    />
+                    <Image
+                        src="/Logodesktop.svg"
+                        alt="Logo"
+                        width={120}
+                        height={32}
+                        className="h-12 w-auto object-contain hidden md:block"
                         priority
                     />
                 </div>

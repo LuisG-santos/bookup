@@ -3,7 +3,9 @@ import { Card, CardContent } from "./card";
 import Image from "next/image";
 import { Button } from "./button";
 import { Badge } from "./badge";
-import { FlameIcon, StarIcon } from "lucide-react";
+import { FlameIcon } from "lucide-react";
+import Link from "next/link";
+
 
 
 
@@ -25,7 +27,12 @@ const ServicesGrid = ({services}: ServicesGridProps) => {
                 <div className=" py-3">
                     <h3 className="font-semibold ">{services.name}</h3>
                     <p className="text-sm text-gray-400 line-clamp-2">{services.description}</p>
-                    <Button variant="secondary" className="w-full mt-3 bg-white text-black">Agendar</Button>
+
+                    <Link href={`/servicesshop/${services.id}`}>
+                        <Button variant="secondary" className="w-full mt-3  text-white hover:bg-zinc-700">
+                            Agendar
+                        </Button>
+                    </Link>
                 </div>
             </CardContent>
         </Card>

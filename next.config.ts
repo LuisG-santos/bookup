@@ -11,7 +11,16 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    remotePatterns: [{ hostname: "utfs.io" }],
+    remotePatterns: [
+      { 
+      protocol: "https",
+      hostname: "belivio.b-cdn.net",
+      pathname: "/**"
+    },
+    {
+      hostname: "utfs.io",
+    }
+  ],
   },
 };
 
