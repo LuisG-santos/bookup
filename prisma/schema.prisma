@@ -14,24 +14,39 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  name      String
-  bookings  Booking[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           String    @id @default(uuid())
+  email        String
+  name         String
+  passwordHash String
+  role         String    @default("USER")
+  bookings     Booking[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  commerce     Commerce @relation(fields: [commerceId], references: [id])
+  commerceId   String
+
+  @@unique([email, commerceId])
 }
 
 model Commerce {
-  id          String     @id @default(uuid())
-  name        String
-  address     String
-  phones      String[]
-  description String
-  imageURL    String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  services    Services[]
+  id              String     @id @default(uuid())
+  name            String
+  address         String?
+  phones          String[]
+  instagram       String?
+  description     String?
+  imageURL        String?
+  primaryColor    String
+  secondaryColor  String
+  backgroundColor String
+  heroTitle       String
+  heroSubtitle    String
+  subdomain       String     @unique
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  services        Services[]
+  users           User[]
+  booking         Booking[]
 }
 
 model Services {
@@ -47,13 +62,15 @@ model Services {
 }
 
 model Booking {
-  id        String   @id @default(uuid())
-  userId    String
-  serviceId String
-  date      DateTime
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  service   Services @relation(fields: [serviceId], references: [id])
+  id         String   @id @default(uuid())
+  userId     String
+  serviceId  String
+  commerceId String
+  date       DateTime
+  status     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  service    Services @relation(fields: [serviceId], references: [id])
+  commerce   Commerce @relation(fields: [commerceId], references: [id])
 }

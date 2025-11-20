@@ -5,43 +5,55 @@ import { Button } from "./button";
 import { Badge } from "./badge";
 import { FlameIcon } from "lucide-react";
 import Link from "next/link";
+import { Decimal } from "@/app/generated/prisma/runtime/index-browser";
 
 
 
 
 interface ServicesGridProps {
     services: Services;
+
 }
-const ServicesGrid = ({services}: ServicesGridProps) => {
-    return ( 
-        <Card className="min-w-[170px] p-0 rounded-2xl">
-            <CardContent className="p-0 px-2 pt-2 pb-1">
-                <div className="relative h-[156px] w-full">
+const ServicesGrid = ({ services }: ServicesGridProps) => {
+    return (
+
+        <Card className="min-w-[170px] p-0 rounded-2xl h-full">
+            <CardContent className="flex h-full flex- p-0 px-2 pt-2 pb-1 gap-3">
+                <div className="relative h-[150px] w-[150px] min-h-[150px] min-w-[150px] max-h-[150px] max-w-[150px]">
                     <Image fill className="object-cover rounded-2xl" src={services.imageURL} alt={services.name} />
                     <Badge className="absolute left-2 top-2 space-x-1 bg-orange-600" variant="secondary">
                         <FlameIcon className="h-4 w-4" />
                         <p>Popular</p>
-                        </Badge>
+                    </Badge>
                 </div>
 
-                <div className=" py-3">
+                <div className="flex flex-1 flex-col py-3">
                     <h3 className="font-semibold ">{services.name}</h3>
-                    <p className="text-sm text-gray-400 line-clamp-2">{services.description}</p>
-
-                    <Link href={`/servicesshop/${services.id}`}>
-                        <Button variant="secondary" className="w-full mt-3  text-white hover:bg-zinc-700">
-                            Agendar
-                        </Button>
-                    </Link>
+                    <p className="text-sm text-gray-400 line-clamp-3">{services.description}</p>
+                    <div className="mt-auto space-y-3 pt-3">
+                        <p className="text-sm font-medium text-white mb-2">
+                            {Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                            }).format(Number(services.price))}
+                        </p>
+                        <Link href={`/servicesshop/${services.id}`}>
+                            <Button size="sm" variant="secondary" className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base">
+                                Agendar
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
+
+
             </CardContent>
         </Card>
 
 
- 
 
 
-     );
+
+    );
 }
- 
+
 export default ServicesGrid;

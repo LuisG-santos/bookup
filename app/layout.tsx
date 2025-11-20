@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Card, CardContent } from "./_components/ui/card";
+import Contacts from "./_components/ui/contacts";
+import { db } from "./_lib/prisma";
+
+const CommerceContacts = await db.commerce.findUnique({
+  where: { id: "4f7ce77f-94d5-4e03-b05f-1d62d810e227" },
+  select: {
+    phones: true,
+    instagram: true,
+  },
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +33,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="dark">
       <body
@@ -29,6 +41,28 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+
+        <footer>
+          <Card className="py-1 px-2">
+            <CardContent className="px-5 py-6">
+
+
+
+              <div className="pt-3 space-y-3">
+                {CommerceContacts?.phones.map((phone, index) => (
+                  <Contacts phone={phone} instagram={CommerceContacts?.instagram} key={index} />
+                ))}
+
+                <p className="text-sm text-gray-400 pt-3 justify-end">
+                  © 2025 <span className="font-bold">Belivio</span>. Todos os direitos reservados.
+                </p>
+
+              </div>
+
+            </CardContent>
+          </Card>
+        </footer>
+
       </body>
     </html>
   );

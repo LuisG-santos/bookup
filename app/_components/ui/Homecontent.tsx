@@ -1,25 +1,29 @@
+import { Button } from "./button";
+import Header from "./header";
+import { Input } from "./input";
+import { Card, CardContent } from "./card";
+import ServicesGrid from "./ServicesGrid";
+import BookingItem from "./BookingItem";
+import Contacts from "./contacts";
 import Image from "next/image";
-import { Button } from "./_components/ui/button";
-import Header from "./_components/ui/header";
-import { Input } from "./_components/ui/input";
-import {SearchIcon} from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import { ClientBanner } from "@/app/_components/ui/banner";
-import { db } from "./_lib/prisma";
-import ServicesGrid from "./_components/ui/ServicesGrid";
-import { quicksearchOptions } from "./_constants/search";
-import BookingItem from "./_components/ui/BookingItem";
+import { quicksearchOptions } from "@/app/_constants/search";
+import { db } from "@/app/_lib/prisma";
 
+type HomeContentProps = {
+  commerceId: string;
+};
 
-
-export default async function Home() {
+export default async function HomeContent({ commerceId }: HomeContentProps) {
 
   const UniqueCommerce = await db.services.findMany({
-    where: { commerceId: "4f7ce77f-94d5-4e03-b05f-1d62d810e227" },
+    where: { commerceId: commerceId },
     orderBy: { name: "desc", }
   });
 
   const CommerceContacts = await db.commerce.findUnique({
-    where: { id: "4f7ce77f-94d5-4e03-b05f-1d62d810e227" },
+    where: { id: commerceId },
     select: {
       phones: true,
       instagram: true,
@@ -31,14 +35,14 @@ export default async function Home() {
 
 
   return (
-    <div>
-      <Header />
+    <div className="bg-[var(--secondary)] min-h-screen">
+      <Header/>
       <div className="p-5">
         <h2 className="text-xl font-bold">Olá, Luis !</h2>
         <p>Quinta-Feira, 13 de novembro</p>
 
         <div className="flex items-center gap-2 mt-6">
-          <Input placeholder="O que você está procurando?" className="" />
+          <Input placeholder="O que você está procurando?" className="bg-zinc-800" />
           <Button className="bg-zinc-100 hover:bg-zinc-300 focus:ring-2 focus:ring-slate-400 border-black" >
             <SearchIcon className="text-black" />
 
@@ -70,13 +74,11 @@ export default async function Home() {
 
         </div>
 
-         
-
 
 
       </div>
 
-      
+    
     </div>
   );
 }
