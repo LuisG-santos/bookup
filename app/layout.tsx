@@ -35,33 +35,14 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en" className="dark">
+    <html lang="pt-BR" className="dark">
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
 
-        <footer>
-          <Card className="py-1 px-2">
-            <CardContent className="px-5 py-6">
-
-
-
-              <div className="pt-3 space-y-3">
-                {CommerceContacts?.phones.map((phone, index) => (
-                  <Contacts phone={phone} instagram={CommerceContacts?.instagram} key={index} />
-                ))}
-
-                <p className="text-sm text-gray-400 pt-3 justify-end">
-                  © 2025 <span className="font-bold">Belivio</span>. Todos os direitos reservados.
-                </p>
-
-              </div>
-
-            </CardContent>
-          </Card>
-        </footer>
+        
 
       </body>
     </html>

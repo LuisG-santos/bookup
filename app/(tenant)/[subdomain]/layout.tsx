@@ -1,3 +1,4 @@
+import Header from "@/app/_components/ui/header";
 import { PrismaClient } from "@prisma/client";
 import type { ReactNode, CSSProperties } from "react";
 
@@ -20,14 +21,19 @@ export default async function TenantLayout({ children, params}: TenantLayoutProp
         return <div>Commerce not found</div>;
     }
     const themeVariables = {
+        ['--background']: commerce.backgroundColor,
         ['--primary']: commerce.primaryColor,
         ['--secondary']: commerce.secondaryColor,
+        ['--text-primary']: '#000000',
+        ['--text-secondary']: '	#ffffff',
     } as CSSProperties;
 
     return (
             <div
                 style={themeVariables}
                 className="min-h-screen bg-va">
+                    {/* <Header subdomain={subdomain}/> */}
+                    
                 {children}
             </div>
     )

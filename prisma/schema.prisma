@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// ---------- Configuração básica ----------
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,41 +14,116 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String    @id @default(uuid())
-  email        String
-  name         String
-  passwordHash String
-  role         String    @default("USER")
-  bookings     Booking[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  commerce     Commerce @relation(fields: [commerceId], references: [id])
-  commerceId   String
-
-  @@unique([email, commerceId])
+// ---------- Enum de papéis por tenant ----------
+enum Role {
+  CLIENT   // cliente que agenda
+  OWNER    // dono do comércio
 }
+
+// ---------- Models do Auth.js (ajustados) ----------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+
+  // Auth.js
+  accounts      Account[]
+  sessions      Session[]
+
+  // Seu SaaS
+  bookings      Booking[]
+  memberships   CommerceMembership[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ---------- Multi-tenant / Domínio do SaaS ----------
 
 model Commerce {
   id              String     @id @default(uuid())
   name            String
   address         String?
-  phones          String[]
-  instagram       String?
+  phones          String[]   // pode ter vários telefones
+  instagram       String?    // @barbearia_x
   description     String?
-  imageURL        String?
+  imageURL        String?    // logo / foto principal
+
+  // Personalização (tenant)
   primaryColor    String
   secondaryColor  String
   backgroundColor String
   heroTitle       String
   heroSubtitle    String
-  subdomain       String     @unique
+  subdomain       String     @unique   // ex: "barbearia-x"
+
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+
   services        Services[]
-  users           User[]
-  booking         Booking[]
+  users           CommerceMembership[]
+  bookings        Booking[]
 }
+
+// Relaciona User <-> Commerce com papel naquele tenant
+model CommerceMembership {
+  id         String   @id @default(cuid())
+  userId     String
+  commerceId String
+  role       Role
+
+  user       User     @relation(fields: [userId], references: [id])
+  commerce   Commerce @relation(fields: [commerceId], references: [id])
+
+  @@unique([userId, commerceId])           // 1 vínculo por commerce
+  @@map("commerce_memberships")
+}
+
+// ---------- Serviços e agendamentos ----------
 
 model Services {
   id          String    @id @default(uuid())
@@ -56,20 +132,23 @@ model Services {
   description String
   imageURL    String
   price       Decimal   @db.Decimal(10, 2)
-  duration    Int // duration in minutes
+  duration    Int       // duração em minutos
+
   commerce    Commerce  @relation(fields: [commerceId], references: [id])
   bookings    Booking[]
 }
 
 model Booking {
   id         String   @id @default(uuid())
-  userId     String
+  userId     String   // quem agendou (cliente)
   serviceId  String
   commerceId String
   date       DateTime
-  status     String
+  status     String   // ex: PENDING, CONFIRMED, CANCELED
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
   user       User     @relation(fields: [userId], references: [id])
   service    Services @relation(fields: [serviceId], references: [id])
   commerce   Commerce @relation(fields: [commerceId], references: [id])

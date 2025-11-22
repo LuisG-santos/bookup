@@ -8,6 +8,8 @@ import { db } from "./_lib/prisma";
 import ServicesGrid from "./_components/ui/ServicesGrid";
 import { quicksearchOptions } from "./_constants/search";
 import BookingItem from "./_components/ui/BookingItem";
+import { Card, CardContent } from "./_components/ui/card";
+import Contacts from "./_components/ui/contacts";
 
 
 
@@ -66,7 +68,7 @@ export default async function Home() {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:overflow-x-auto md:gap-6 overflow-auto [&::-webkit-scrollbar]:hidden">
 
-          {UniqueCommerce.map((service) => <ServicesGrid services={service} key={service.id} />)}
+          {UniqueCommerce.map((service) => <ServicesGrid services={service} basePath="" key={service.id} />)}
 
         </div>
 
@@ -76,7 +78,26 @@ export default async function Home() {
 
       </div>
 
-      
+      <footer>
+          <Card className="py-1 px-2">
+            <CardContent className="px-5 py-6">
+
+
+
+              <div className="pt-3 space-y-3">
+                {CommerceContacts?.phones.map((phone, index) => (
+                  <Contacts phone={phone} instagram={CommerceContacts?.instagram} key={index} />
+                ))}
+
+                <p className="text-sm text-gray-400 pt-3 justify-end">
+                  © 2025 <span className="font-bold">Belivio</span>. Todos os direitos reservados.
+                </p>
+
+              </div>
+
+            </CardContent>
+          </Card>
+        </footer>
     </div>
   );
 }

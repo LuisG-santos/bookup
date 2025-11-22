@@ -5,16 +5,12 @@ import { Button } from "./button";
 import { Badge } from "./badge";
 import { FlameIcon } from "lucide-react";
 import Link from "next/link";
-import { Decimal } from "@/app/generated/prisma/runtime/index-browser";
-
-
-
 
 interface ServicesGridProps {
     services: Services;
-
+    basePath: string;
 }
-const ServicesGrid = ({ services }: ServicesGridProps) => {
+const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
     return (
 
         <Card className="min-w-[170px] p-0 rounded-2xl h-full">
@@ -37,7 +33,7 @@ const ServicesGrid = ({ services }: ServicesGridProps) => {
                                 currency: "BRL",
                             }).format(Number(services.price))}
                         </p>
-                        <Link href={`/servicesshop/${services.id}`}>
+                        <Link href={`${basePath}/schedule/${services.id}`}>
                             <Button size="sm" variant="secondary" className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base">
                                 Agendar
                             </Button>
