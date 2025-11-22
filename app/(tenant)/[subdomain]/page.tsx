@@ -19,6 +19,6 @@ export default async function TenantPage({ params }: PageProps) {
   const basePath = `/${subdomain}`;
 
   return (
-   <HomeContent commerceId={commerce.id} basePath={`${subdomain}`} />
+   <HomeContent commerceId={commerce.id} basePath={`${subdomain}`} commerceName={commerce.name}/>
   );
 }

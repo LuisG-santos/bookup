@@ -1,5 +1,7 @@
 import Header from "@/app/_components/ui/header";
+import AuthProvider from "@/app/_providers/auth";
 import { PrismaClient } from "@prisma/client";
+import { SessionProvider } from "next-auth/react";
 import type { ReactNode, CSSProperties } from "react";
 
 
@@ -29,12 +31,9 @@ export default async function TenantLayout({ children, params}: TenantLayoutProp
     } as CSSProperties;
 
     return (
-            <div
-                style={themeVariables}
-                className="min-h-screen bg-va">
-                    {/* <Header subdomain={subdomain}/> */}
-                    
-                {children}
+            <div style={themeVariables} className="min-h-screen bg-va">
+                <AuthProvider>{children}</AuthProvider>
+                {/* <Header subdomain={subdomain}/> */}
             </div>
     )
 }

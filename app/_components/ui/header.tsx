@@ -7,9 +7,10 @@ import SidebarSheet from "../sidebar-sheet";
 
 type HeaderProps = {
   subdomain: string;
+  commerceName: string;
 };
 
-const Header = ({ subdomain }: HeaderProps) => {
+const Header = ({ subdomain, commerceName }: HeaderProps) => {
     return (
         <Card className="h-24 bg-[var(--primary)] rounded-none">
             <CardContent className="flex flex-row justify-between items-center h-full px-4 py-0">
@@ -42,7 +43,7 @@ const Header = ({ subdomain }: HeaderProps) => {
                             <MenuIcon />
                         </Button>
                     </SheetTrigger>
-                   <SidebarSheet />
+                   <SidebarSheet commerceName={commerceName} />
                 </Sheet>
 
 

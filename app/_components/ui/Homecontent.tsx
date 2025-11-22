@@ -19,9 +19,10 @@ import {
 type HomeContentProps = {
   commerceId: string;
   basePath: string;
+  commerceName: string;
 };
 
-export default async function HomeContent({ commerceId, basePath }: HomeContentProps) {
+export default async function HomeContent({ commerceId, basePath, commerceName }: HomeContentProps) {
 
   const UniqueCommerce = await db.services.findMany({
     where: { commerceId: commerceId },
@@ -42,7 +43,7 @@ export default async function HomeContent({ commerceId, basePath }: HomeContentP
 
   return (
     <div className="bg-[var(--background)] min-h-screen">
-      <Header subdomain={basePath} />
+      <Header subdomain={basePath} commerceName={commerceName} />
       
       <div className="p-5">
         <h2 className="text-xl font-bold">Olá, Luis !</h2>
