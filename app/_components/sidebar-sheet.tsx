@@ -14,7 +14,7 @@ import Link from "next/link";
 import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import Image from "next/image";
@@ -34,8 +34,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
     const loginPage = subdomain ? `/${subdomain}/login` : '/login';
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
-    const [name, setName] = useState(data?.user?.name ?? "");
-    const [avatarPreview, setAvatarPreview] = useState(data?.user?.image ?? "");
+    const handleLogout = () => signOut();
 
     return (
 
@@ -140,7 +139,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                                 </DialogContent>
                             </Dialog>
 
-                            <Button variant="ghost" className="justify-start">
+                            <Button variant="ghost" className="justify-start" onClick={handleLogout}>
                                 <ChevronRightIcon /> Sair da conta
 
                             </Button>

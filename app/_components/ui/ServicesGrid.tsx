@@ -34,7 +34,7 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
                             }).format(Number(services.price))}
                         </p>
                         <Link href={`${basePath}/schedule/${services.id}`}>
-                            <Button size="sm" variant="secondary" className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base">
+                            <Button size="sm"  className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-zinc-700">
                                 Agendar
                             </Button>
                         </Link>

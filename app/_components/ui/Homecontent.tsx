@@ -1,79 +1,103 @@
 import { Button } from "./button";
 import Header from "./header";
-import { Input } from "./input";
-import { Card, CardContent } from "./card";
 import ServicesGrid from "./ServicesGrid";
 import BookingItem from "./BookingItem";
-import Contacts from "./contacts";
 import Image from "next/image";
-import { SearchIcon } from "lucide-react";
 import { ClientBanner } from "@/app/_components/ui/banner";
-import { quicksearchOptions } from "@/app/_constants/search";
+import { createQuicksearchOption } from "@/app/_constants/search";
 import { db } from "@/app/_lib/prisma";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/app/_components/ui/input-group"
+import FooterPage from "./Footer";
+import SearchForm from "./SearchForm";
+import { Tag } from "lucide-react";
+import Link from "next/link";
+import { encode } from "punycode";
 
 type HomeContentProps = {
   commerceId: string;
   basePath: string;
   commerceName: string;
+  searchParams?: {
+    search?: string;
+  };
 };
+export const dynamic = "force-dynamic";
 
-export default async function HomeContent({ commerceId, basePath, commerceName }: HomeContentProps) {
+export default async function HomeContent({ commerceId, basePath, commerceName, searchParams }: HomeContentProps) {
+  const term = (searchParams?.search ?? "").trim();
 
-  const UniqueCommerce = await db.services.findMany({
-    where: { commerceId: commerceId },
-    orderBy: { name: "desc", }
-  });
-
-  const CommerceContacts = await db.commerce.findUnique({
-    where: { id: commerceId },
-    select: {
-      phones: true,
-      instagram: true,
-      name: true,
+  const services = await db.services.findMany({
+    where: {
+      commerceId,
+      ...(term && {
+        OR: [
+          {
+            name: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+          {
+            category: {
+              contains: term,
+              mode: "insensitive",
+            },
+          },
+        ],
+      }),
     },
+    orderBy: { name: "asc" },
   });
 
+  let servicesToShow = services;
+  let notFound = false;
+
+  if (term && services.length === 0) {
+    notFound = true;
 
 
+    servicesToShow = await db.services.findMany({
+      where: { commerceId },
+      orderBy: { name: "asc" },
+    });
+  }
+
+  const categoriesFromDb = await db.services.findMany({
+    where: { commerceId },
+    select: { category: true },
+    distinct: ["category"],
+  });
+
+  const quicksearchOptions = createQuicksearchOption(
+    categoriesFromDb.map((c) => c.category)
+  );
+
+  console.log("TERM:", term, "TOTAL:", services.length);
 
   return (
     <div className="bg-[var(--background)] min-h-screen">
       <Header subdomain={basePath} commerceName={commerceName} />
-      
+
       <div className="p-5">
         <h2 className="text-xl font-bold">Olá, Luis !</h2>
         <p>Quinta-Feira, 13 de novembro</p>
-        
-
-         <div className="grid w-full max-w-sm gap-6 pt-3">
-      <InputGroup>
-        <InputGroupInput placeholder="Search..." />
-        <InputGroupAddon>
-          <SearchIcon />
-        </InputGroupAddon>
-      </InputGroup>
-      </div>
 
 
-        {/* <div className="flex items-center gap-2 mt-6">
-          <Input placeholder="O que você está procurando?" className="" />
-          <Button className="bg-zinc-100 hover:bg-zinc-300 focus:ring-2 focus:ring-slate-400 border-black" >
-            <SearchIcon className="text-black" />
 
-          </Button>
-        </div> */}
 
-        <div className=" flex gap-2 mt-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+
+        <SearchForm defaultValue={term} placeholder="O que você esta procurando?" />
+        <div className=" flex gap-2 mt-6 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth snap-x snap-mandatory">
 
           {quicksearchOptions.map((option) => (
-            <Button className="gap-2" variant="secondary" key={option.title}>
-              <Image src={option.ImgUrl} alt={option.title} width={16} height={16} />
-              {option.title}
+            <Button
+              className="gap-2 bg-[var(--primary)] text-[var(--text-secondary)] snap-start hover:bg-zinc-700"
+              variant="secondary"
+              key={option.label}
+            >
+              <Tag className="h-4 w-4" />
+              <Link href={`?search=${encodeURIComponent(option.value)}`}>
+                {option.label}
+              </Link>
             </Button>
           ))}
         </div>
@@ -83,33 +107,19 @@ export default async function HomeContent({ commerceId, basePath, commerceName }
 
         <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Serviços Disponiveis</h2>
 
+        {notFound && (
+          <p className="text-sm text-red-400 mb-3">
+            Nenhum serviço encontrado para "{term}".
+          </p>
+        )}
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:overflow-x-auto md:gap-6 overflow-auto [&::-webkit-scrollbar]:hidden">
 
-          {UniqueCommerce.map((service) => <ServicesGrid services={service} key={service.id} basePath={basePath} />)}
-
+          {servicesToShow.map((service) => <ServicesGrid services={service} key={service.id} basePath={basePath} />)}
         </div>
       </div>
-      <footer>
-        <Card className="py-1 px-2 rounded-none">
-          <CardContent className="px-5 py-6 ">
 
-
-
-            <div className="pt-3 space-y-3">
-              {CommerceContacts?.phones.map((phone, index) => (
-                <Contacts phone={phone} instagram={CommerceContacts?.instagram} key={index} />
-              ))}
-
-              <p className="text-sm text-gray-400 pt-3 justify-end">
-                © 2025 <span className="font-bold">Belivio</span>. Todos os direitos reservados.
-              </p>
-
-            </div>
-
-          </CardContent>
-        </Card>
-      </footer>
-
+      <FooterPage commerceId={commerceId} />
 
     </div>
   );

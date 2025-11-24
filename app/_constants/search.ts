@@ -1,12 +1,12 @@
-interface QuicksearchOpt {
-    ImgUrl: string;
-    title: string;
+
+
+export interface QuicksearchOpt {
+    label: string;
+    value: string;
   }
-  const quicksearchOptions: QuicksearchOpt[] = [
-    { ImgUrl: "/scissors.svg", title: "Cabelo" },
-    { ImgUrl: "/mustache-svgrepo-com.svg", title: "Barba" },
-    { ImgUrl: "/razor-blade-svgrepo-com (1).svg", title: "Acabamento" },
-    { ImgUrl: "/footprints-svgrepo-com.svg", title: "Pezinho" },
-  ];
-  
-export { quicksearchOptions };
+  export function createQuicksearchOption(categories: string[]): QuicksearchOpt[] {
+    return categories.map((category) => ({
+      label: category,
+      value: category
+    }));
+  }

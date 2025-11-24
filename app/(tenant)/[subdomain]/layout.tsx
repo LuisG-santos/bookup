@@ -34,6 +34,7 @@ export default async function TenantLayout({ children, params}: TenantLayoutProp
             <div style={themeVariables} className="min-h-screen bg-va">
                 <AuthProvider>{children}</AuthProvider>
                 {/* <Header subdomain={subdomain}/> */}
+                
             </div>
     )
 }
