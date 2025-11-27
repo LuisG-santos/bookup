@@ -2,9 +2,12 @@ import Image from "next/image"
 
 type BannerProps = {
 	className?: string
+	title?: string
+	subtitle?: string
+	imageUrl?: string
 }
 
-export function ClientBanner({ className }: BannerProps) {
+export function ClientBanner({ className, title, subtitle, imageUrl }: BannerProps) {
 	return (
 		<section
 			className={[
@@ -21,22 +24,20 @@ export function ClientBanner({ className }: BannerProps) {
 
 				<header className="space-y-3">
 					<h2 className="text-3xl font-semibold leading-tight tracking-tight text-balance md:text-4xl">
-						Potencialize seu negócio{" "}
-						<br className="hidden md:block" />
-						com poucos cliques
+						{title}
 					</h2>
 					<p className="text-base text-white/70 md:text-lg">
-						Gerencie compromissos, confirme clientes e mantenha todos os horários sincronizados em um só lugar.
+						{subtitle}
 					</p>
 				</header>
 
 			
 			</div>
-
+			
 			<div className="order-1 mb-6 flex justify-center md:order-2 md:mb-0">
 				<div className="relative h-56 w-full max-w-xs flex-shrink-0 md:h-72 md:max-w-none md:w-[420px]">
 					<Image
-						src="/cartoonH.png"
+						src={imageUrl ?? "/cartoonH.png"}
 						alt="Profissional organizando agenda em um notebook"
 						fill
 						sizes="(max-width: 767px) 320px, 420px"

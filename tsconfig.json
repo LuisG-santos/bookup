@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "types": [
+      "next-auth"
+    ],
     "target": "ES2017",
     "lib": [
       "dom",
@@ -34,8 +37,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "prisma/seed.js"  ],
+    "**/*.mts",
+    "prisma/seed.js",
+    "app/next-auth.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

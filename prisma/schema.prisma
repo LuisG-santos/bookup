@@ -97,6 +97,7 @@ model Commerce {
   primaryColor    String
   secondaryColor  String
   backgroundColor String
+  heroImageURL   String?
   heroTitle       String
   heroSubtitle    String
   subdomain       String     @unique   // ex: "barbearia-x"

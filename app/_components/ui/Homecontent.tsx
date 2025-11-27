@@ -2,7 +2,6 @@ import { Button } from "./button";
 import Header from "./header";
 import ServicesGrid from "./ServicesGrid";
 import BookingItem from "./BookingItem";
-import Image from "next/image";
 import { ClientBanner } from "@/app/_components/ui/banner";
 import { createQuicksearchOption } from "@/app/_constants/search";
 import { db } from "@/app/_lib/prisma";
@@ -10,22 +9,45 @@ import FooterPage from "./Footer";
 import SearchForm from "./SearchForm";
 import { Tag } from "lucide-react";
 import Link from "next/link";
-import { encode } from "punycode";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+
 
 type HomeContentProps = {
   commerceId: string;
   basePath: string;
   commerceName: string;
+  UserName: string;
   searchParams?: {
     search?: string;
   };
 };
 export const dynamic = "force-dynamic";
 
-export default async function HomeContent({ commerceId, basePath, commerceName, searchParams }: HomeContentProps) {
+export default async function HomeContent({ commerceId, basePath, commerceName, UserName, searchParams }: HomeContentProps) {
+  const today = new Date();
+const formattedDate = today.toLocaleDateString("pt-BR", {
+  weekday: "long",
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+  const session = await getServerSession(authOptions);
+  const userName = session?.user?.name ?? "Visitante";
+ 
+  
+  
   const term = (searchParams?.search ?? "").trim();
+  const Herocommerce = await db.commerce.findUnique({
+    where: { id: commerceId },
+    select: {
+      heroTitle: true,
+      heroSubtitle: true,
+      heroImageURL: true,
+    },
+  });
 
-  const services = await db.services.findMany({
+  const servicesRaw = await db.services.findMany({
     where: {
       commerceId,
       ...(term && {
@@ -48,20 +70,37 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
     orderBy: { name: "asc" },
   });
 
-  let servicesToShow = services;
-  let notFound = false;
+  const services = servicesRaw.map((service) => ({
+    id: service.id,
+    name: service.name,
+    description: service.description,
+    imageURL: service.imageURL,
+    commerceId: service.commerceId,
+    price: Number(service.price), // <- aqui converte
+  }));
 
-  if (term && services.length === 0) {
-    notFound = true;
+let servicesToShow = services;
+let notFound = false;
 
+if (term && services.length === 0) {
+  notFound = true;
 
-    servicesToShow = await db.services.findMany({
-      where: { commerceId },
-      orderBy: { name: "asc" },
-    });
-  }
+  const AllservicesRaw = await db.services.findMany({
+    where: { commerceId },
+    orderBy: { name: "asc" },
+  });
 
-  const categoriesFromDb = await db.services.findMany({
+  servicesToShow = AllservicesRaw.map((service) => ({
+    id: service.id,
+    name: service.name,
+    description: service.description,
+    imageURL: service.imageURL,
+    commerceId: service.commerceId,
+    price: Number(service.price), // <- aqui converte
+  }));
+}
+
+const categoriesFromDb = await db.services.findMany({
     where: { commerceId },
     select: { category: true },
     distinct: ["category"],
@@ -71,26 +110,20 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
     categoriesFromDb.map((c) => c.category)
   );
 
-  console.log("TERM:", term, "TOTAL:", services.length);
-
   return (
-    <div className="bg-[var(--background)] min-h-screen">
+    <div className="bg-[var(--background)] text-[var(--text-on-background)] min-h-screen">
       <Header subdomain={basePath} commerceName={commerceName} />
 
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Luis !</h2>
-        <p>Quinta-Feira, 13 de novembro</p>
-
-
-
-
-
+        <h2 className="text-xl font-bold ">Olá, {userName} !</h2>
+        <p className="text-sm ">{formattedDate}</p>
+      
         <SearchForm defaultValue={term} placeholder="O que você esta procurando?" />
         <div className=" flex gap-2 mt-6 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth snap-x snap-mandatory">
 
           {quicksearchOptions.map((option) => (
             <Button
-              className="gap-2 bg-[var(--primary)] text-[var(--text-secondary)] snap-start hover:bg-zinc-700"
+              className="gap-2 bg-[var(--primary)] text-[var(--text-on-primary)] snap-start hover:bg-zinc-700"
               variant="secondary"
               key={option.label}
             >
@@ -102,7 +135,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
           ))}
         </div>
 
-        <ClientBanner className="mt-6" />
+        <ClientBanner title={Herocommerce?.heroTitle} subtitle={Herocommerce?.heroSubtitle} imageUrl={Herocommerce?.heroImageURL ?? "/cartoonH.png"} className="mt-6" />
         <BookingItem />
 
         <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Serviços Disponiveis</h2>
@@ -114,7 +147,6 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
         )}
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:overflow-x-auto md:gap-6 overflow-auto [&::-webkit-scrollbar]:hidden">
-
           {servicesToShow.map((service) => <ServicesGrid services={service} key={service.id} basePath={basePath} />)}
         </div>
       </div>

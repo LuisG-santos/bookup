@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       pathname: "/**"
     },
     {
-      hostname: "utfs.io",
+      hostname: "lh3.googleusercontent.com",
     }
   ],
   },

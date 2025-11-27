@@ -1,4 +1,5 @@
-import { Services } from "@prisma/client";
+"use client"
+
 import { Card, CardContent } from "./card";
 import Image from "next/image";
 import { Button } from "./button";
@@ -7,7 +8,14 @@ import { FlameIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ServicesGridProps {
-    services: Services;
+    services: {
+        id: string;
+        name: string;
+        description: string;
+        imageURL: string;
+        commerceId: string;
+        price: number;
+    };
     basePath: string;
 }
 const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
@@ -31,13 +39,13 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
                             {Intl.NumberFormat("pt-BR", {
                                 style: "currency",
                                 currency: "BRL",
-                            }).format(Number(services.price))}
+                            }).format(services.price)}
                         </p>
-                        <Link href={`${basePath}/schedule/${services.id}`}>
-                            <Button size="sm"  className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-zinc-700">
+                        <Button size="sm" variant="outline" className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-(var[--secondary]) hover:bg-zinc-700" asChild>
+                            <Link href={`${basePath}/schedule/${services.id}`}>
                                 Agendar
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     </div>
                 </div>
 

@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Card, CardContent } from "./_components/ui/card";
-import Contacts from "./_components/ui/contacts";
-import { db } from "./_lib/prisma";
 
-const CommerceContacts = await db.commerce.findUnique({
-  where: { id: "4f7ce77f-94d5-4e03-b05f-1d62d810e227" },
-  select: {
-    phones: true,
-    instagram: true,
-  },
-});
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

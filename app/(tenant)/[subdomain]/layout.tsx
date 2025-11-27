@@ -1,8 +1,8 @@
-import Header from "@/app/_components/ui/header";
+
 import AuthProvider from "@/app/_providers/auth";
 import { PrismaClient } from "@prisma/client";
-import { SessionProvider } from "next-auth/react";
 import type { ReactNode, CSSProperties } from "react";
+import { getTextColorsForBackground } from "@/app/utils/color";
 
 
 const prisma = new PrismaClient();
@@ -22,19 +22,23 @@ export default async function TenantLayout({ children, params}: TenantLayoutProp
     if (!commerce) {
         return <div>Commerce not found</div>;
     }
+
+    const textColorsBackground = getTextColorsForBackground(commerce.backgroundColor);
+    const textColorsPrimary = getTextColorsForBackground(commerce.primaryColor);
+    const textColorsSecondary = getTextColorsForBackground(commerce.secondaryColor);
     const themeVariables = {
         ['--background']: commerce.backgroundColor,
         ['--primary']: commerce.primaryColor,
         ['--secondary']: commerce.secondaryColor,
-        ['--text-primary']: '#000000',
-        ['--text-secondary']: '	#ffffff',
+        ['--text-on-background']: textColorsBackground.primary,
+        ['--text-on-primary']: textColorsPrimary.primary,
+        ['--text-on-secondary']: textColorsSecondary.primary,
     } as CSSProperties;
 
+   
     return (
             <div style={themeVariables} className="min-h-screen bg-va">
                 <AuthProvider>{children}</AuthProvider>
-                {/* <Header subdomain={subdomain}/> */}
-                
             </div>
     )
 }

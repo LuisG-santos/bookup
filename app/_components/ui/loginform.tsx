@@ -8,7 +8,11 @@ import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useParams } from "next/navigation";
 
-const LoginForms = () => {
+type LoginFormsProps = {
+  heroImageURL?: string;
+};
+
+export default function LoginForms({ heroImageURL }: LoginFormsProps) {
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
    const handleLoginWithGoogle = async() => {
@@ -18,51 +22,37 @@ const LoginForms = () => {
   };
 
   return ( 
-    <Card className=" max-w-sm border border-solid ">
-      <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <a
-                  href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-              <Input id="password" type="password" required />
-            </div>
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-zinc-300">
-          Login
-        </Button>
-        <Button variant="outline" className="w-full" onClick={handleLoginWithGoogle}>
-          <Image src="/google.svg" alt="Google Icon" width={20} height={20} className="inline-block mr-2" />
+    <div className="relative min-h-screen flex items-end w-full bg-gray-1000">
+      
+      <Image
+        src="/backgroundLogin.png"
+        alt="Login Illustration"
+        fill
+        className="object-cover pb-40"
+        priority
+      />
+
+    <div className="absolute inset-0 bg-gradient-to-t from-black/100 to-transparent"></div>
+
+      <div className="relative z-10 p-6 pb-3 text-center w-full max-w-md ">
+        <h1 className="text-3xl font-bold leading-tight"> Faça login com Google</h1>
+        <p className="text-gray-300  text-lg">para acessar seus agendamentos<br/>  e facilitar suas próximas visitas</p>
+        <Button
+          variant="outline"
+          className="mt-3 mb-12 w-full bg-white  hover:bg-gray-200 flex items-center gap-2 py-6 text-lg font-semibold"
+          onClick={handleLoginWithGoogle}
+        >
+          <Image
+            src="/google.svg"
+            alt="Google Icon"
+            width={20}
+            height={20}
+            className="inline-block mr-2"
+          />
           Login with Google
         </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
  
-export default LoginForms;
