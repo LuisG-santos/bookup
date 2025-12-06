@@ -25,6 +25,7 @@ const SchedulePage = async ({ params }: PageProps) => {
             name: true,
             price: true,
             commerceId: true,
+            duration: true,
         }
     });
 
@@ -35,7 +36,7 @@ const SchedulePage = async ({ params }: PageProps) => {
 
 
 return (
-    <div className="relative h-[250px] w-full">
+    <div className="relative h-[250px] w-full bg-[var(--background)] text-[var(--text-on-background)]">
         <Button size="icon" variant="outline" className="fixed top-4 left-4" asChild>
             <Link href={`/${subdomain}`} className="">
                 <ChevronLeftIcon />
@@ -60,7 +61,7 @@ return (
             <p className="text-sm text-zinc-400 border-b pb-5 border-zinc-700"> {Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
-            }).format(Number(service.price))} • 50 minutos
+            }).format(Number(service.price))} • {String(service.duration)} minutos
             </p>
             <div className="flex flex-col justify-center">
 
@@ -69,8 +70,9 @@ return (
                     <BookingCalendar service={{
                         id: service.id,
                         name: service.name,
-                        price: service.price.toString(), // ou Number(service.price)
+                        price: service.price.toString(),
                         commerceId: service.commerceId,
+                        duration: service.duration,
                     }} />
 
                 </div>

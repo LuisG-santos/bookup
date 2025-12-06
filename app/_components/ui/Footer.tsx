@@ -17,7 +17,7 @@ const FooterPage = async ({ commerceId }: FooterPageProps) => {
     });
 
     return ( 
-       <footer>
+       <footer className="justify-end">
         <Card className="py-1 px-2 rounded-none">
           <CardContent className="px-5 py-6 ">
 

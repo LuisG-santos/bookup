@@ -1,11 +1,13 @@
 "use server"
+import { revalidatePath } from "next/cache";
 import { db } from "../_lib/prisma"
+import { BookingStatus } from "@prisma/client";
+
 interface CreateBookingParams {
     serviceId: string;
     userId: string;
     date: Date;
     commerceId: string;
-    status: string;
 }
 
 export const createBooking = async (params: CreateBookingParams) => {
@@ -14,9 +16,9 @@ export const createBooking = async (params: CreateBookingParams) => {
             serviceId: params.serviceId,
             date: params.date,
             commerceId: params.commerceId,
-            status: params.status,
+            status: BookingStatus.PENDING,
             userId: params.userId,
         } 
     });
-
+ revalidatePath(`/[subdomain]/schedule/${params.serviceId}`);
 }

@@ -58,15 +58,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-
-  // Auth.js
   accounts      Account[]
   sessions      Session[]
-
-  // Seu SaaS
   bookings      Booking[]
   memberships   CommerceMembership[]
-
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -102,6 +97,10 @@ model Commerce {
   heroSubtitle    String
   subdomain       String     @unique   // ex: "barbearia-x"
 
+  // Horarios dinâmicos
+  openingTimeMinutes Int      @default(540)  // 9:00 AM
+  closingTimeMinutes Int      @default(1020) // 5:00 PM
+  
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
@@ -134,10 +133,16 @@ model Services {
   description String
   imageURL    String
   price       Decimal   @db.Decimal(10, 2)
-  duration    Int       // duração em minutos
+  duration    Int      
 
   commerce    Commerce  @relation(fields: [commerceId], references: [id])
   bookings    Booking[]
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
 }
 
 model Booking {
@@ -146,7 +151,7 @@ model Booking {
   serviceId  String
   commerceId String
   date       DateTime
-  status     String   // ex: PENDING, CONFIRMED, CANCELED
+  status     BookingStatus @default(PENDING)   // ex: PENDING, CONFIRMED, CANCELED
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

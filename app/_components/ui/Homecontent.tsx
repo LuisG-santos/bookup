@@ -2,6 +2,7 @@ import { Button } from "./button";
 import Header from "./header";
 import ServicesGrid from "./ServicesGrid";
 import BookingItem from "./BookingItem";
+import { BookingStatus } from "@prisma/client";
 import { ClientBanner } from "@/app/_components/ui/banner";
 import { createQuicksearchOption } from "@/app/_constants/search";
 import { db } from "@/app/_lib/prisma";
@@ -26,17 +27,51 @@ export const dynamic = "force-dynamic";
 
 export default async function HomeContent({ commerceId, basePath, commerceName, UserName, searchParams }: HomeContentProps) {
   const today = new Date();
-const formattedDate = today.toLocaleDateString("pt-BR", {
-  weekday: "long",
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-});
+  const formattedDate = today.toLocaleDateString("pt-BR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
   const session = await getServerSession(authOptions);
   const userName = session?.user?.name ?? "Visitante";
- 
-  
-  
+  const userId = session?.user?.id;
+  let nextBookingDTO: {
+    id: string;
+    date: string;
+    status: BookingStatus;
+    serviceName: string;
+  } | null = null;
+
+  if (userId) {
+    const nextBooking = await db.booking.findFirst({
+      where: {
+        userId,
+        commerceId: commerceId,
+        date: {
+          gte: new Date(),
+        },
+        status: {
+          in: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
+        },
+      },
+      include: {
+        service: true,
+      },
+      orderBy: { date: "asc" },
+    });
+
+    if (nextBooking) {
+      nextBookingDTO = {
+        id: nextBooking.id,
+        status: nextBooking.status,
+        date: nextBooking.date.toISOString(),
+        serviceName: nextBooking.service.name,
+      };
+    }
+  }
+
+
   const term = (searchParams?.search ?? "").trim();
   const Herocommerce = await db.commerce.findUnique({
     where: { id: commerceId },
@@ -76,31 +111,33 @@ const formattedDate = today.toLocaleDateString("pt-BR", {
     description: service.description,
     imageURL: service.imageURL,
     commerceId: service.commerceId,
-    price: Number(service.price), // <- aqui converte
+    price: Number(service.price),
+    duration: service.duration,
   }));
 
-let servicesToShow = services;
-let notFound = false;
+  let servicesToShow = services;
+  let notFound = false;
 
-if (term && services.length === 0) {
-  notFound = true;
+  if (term && services.length === 0) {
+    notFound = true;
 
-  const AllservicesRaw = await db.services.findMany({
-    where: { commerceId },
-    orderBy: { name: "asc" },
-  });
+    const AllservicesRaw = await db.services.findMany({
+      where: { commerceId },
+      orderBy: { name: "asc" },
+    });
 
-  servicesToShow = AllservicesRaw.map((service) => ({
-    id: service.id,
-    name: service.name,
-    description: service.description,
-    imageURL: service.imageURL,
-    commerceId: service.commerceId,
-    price: Number(service.price), // <- aqui converte
-  }));
-}
+    servicesToShow = AllservicesRaw.map((service) => ({
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      imageURL: service.imageURL,
+      commerceId: service.commerceId,
+      price: Number(service.price),
+      duration: service.duration,
+    }));
+  }
 
-const categoriesFromDb = await db.services.findMany({
+  const categoriesFromDb = await db.services.findMany({
     where: { commerceId },
     select: { category: true },
     distinct: ["category"],
@@ -117,7 +154,7 @@ const categoriesFromDb = await db.services.findMany({
       <div className="p-5">
         <h2 className="text-xl font-bold ">Olá, {userName} !</h2>
         <p className="text-sm ">{formattedDate}</p>
-      
+
         <SearchForm defaultValue={term} placeholder="O que você esta procurando?" />
         <div className=" flex gap-2 mt-6 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth snap-x snap-mandatory">
 
@@ -136,7 +173,7 @@ const categoriesFromDb = await db.services.findMany({
         </div>
 
         <ClientBanner title={Herocommerce?.heroTitle} subtitle={Herocommerce?.heroSubtitle} imageUrl={Herocommerce?.heroImageURL ?? "/cartoonH.png"} className="mt-6" />
-        <BookingItem />
+        <BookingItem user={{ name: session?.user?.name ?? "", image: session?.user?.image ?? "" }} booking={nextBookingDTO} />
 
         <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Serviços Disponiveis</h2>
 
