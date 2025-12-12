@@ -179,9 +179,9 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
 
     return (
-        <div className="flex flex-col justify-center items-center py-6 space-y-5 bg-[var(--background)] text-[var(--text-on-background)]">
+        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg-[var(--background)] text-[var(--text-on-background)]">
             <Calendar
-                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-[var(--background)] text-[var(--text-on-background)] "
+                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-[var(--primary)] text-[var(--text-on-background)] "
                 mode="single"
                 locale={ptBR}
                 disabled={{ before: new Date() }}
@@ -190,8 +190,8 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
             />
 
             {selectedDay && (
-                <div className="pt-8 p-4 bg-[var(--background)] rounded-3xl w-full">
-                    <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-zinc-800">
+                <div className="pt-8 p-4 bg-[var(--primary)] rounded-3xl w-full">
+                    <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">
                         Selecione o horário
                     </h2>
 
@@ -222,22 +222,22 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                 </div>
             )}
 
-            <div className="flex justify-center p-4 w-full border-t border-zinc-700">
-                <Card className=" bg-[var(--primary)] w-full">
-                    <CardHeader className=" border-b border-zinc-700 justify-center">
-                        <CardTitle className="pb-2 font-bold text-lg">
+            <div className="flex justify-center p-4 w-full  bg-[var(--background)] mt-4">
+                <Card className=" bg-[var(--primary)] w-full border-2 border-[var(--secondary)] rounded-3xl shadow-xl">
+                    <CardHeader className=" border-b border-[var(--text-on-primary)] justify-center">
+                        <CardTitle className="pb-2 font-bold text-lg text-[var(--text-on-primary)]">
                             Seu agendamento
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-y-1">
                         <div className="flex items-center justify-between">
                             <h2 className="text-gray-400 text-lg">Serviço:</h2>
-                            <p className="text-sm ">{service?.name}</p>
+                            <p className="text-sm text-[var(--text-on-primary)]">{service?.name}</p>
                         </div>
 
                         <div className="flex items-center justify-between ">
                             <h2 className="text-gray-400 text-lg">Dia:</h2>
-                            <p className="text-sm ">
+                            <p className="text-sm text-[var(--text-on-primary)]">
                                 {selectedDay
                                     ? format(selectedDay, "d 'de' MMMM", { locale: ptBR })
                                     : ""}
@@ -246,12 +246,12 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
                         <div className="flex items-center justify-between ">
                             <h2 className="text-gray-400 text-lg">Hora:</h2>
-                            <p className="text-sm ">{selectedTime}</p>
+                            <p className="text-sm text-[var(--text-on-background)]">{selectedTime}</p>
                         </div>
 
                         <div className="flex items-center  justify-between">
                             <h2 className="text-gray-400 text-lg">Valor:</h2>
-                            <p className="text-sm ">
+                            <p className="text-sm text-[var(--text-on-background)]">
                                 {Intl.NumberFormat("pt-BR", {
                                     style: "currency",
                                     currency: "BRL",
@@ -259,13 +259,13 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                             </p>
                         </div>
 
-                        <div className=" pt-3 border-t border-zinc-700 flex justify-center">
+                        <div className=" pt-3 border-t border-[var(--text-on-primary)] flex justify-center">
                             <Button
                                 variant="outline"
                                 type="button"
                                 onClick={handleCreateBooking}
                                 disabled={!selectedDay || !selectedTime || !service}
-                                className="bg-[var(--primary)] h-12 w-full hover:bg-zinc-800 font-bold"
+                                className="bg-[var(--secondary)] h-12 w-full hover:bg-zinc-800 font-bold"
                             >
                                 Confirmar Agendamento
                             </Button>

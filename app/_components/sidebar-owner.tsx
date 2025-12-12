@@ -11,7 +11,7 @@ import {
 
 
 import Link from "next/link";
-import { CalendarIcon, HomeIcon, ChevronRightIcon} from "lucide-react";
+import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -25,7 +25,7 @@ type SidebarSheetProps = {
     commerceName: string;
 };
 
-const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
+const SidebarOwner = ({ commerceName }: SidebarSheetProps) => {
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
 
@@ -43,7 +43,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
             </SheetHeader>
             <div className="p-5 gap-3 border-b flex items-center border-solid  border-zinc-700">
 
-                {isAuthenticated ? (
+                
                     <div className="flex items-start gap-3">
                         <Avatar className="h-10 w-10">
                             <AvatarImage
@@ -59,18 +59,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                         </div>
 
                     </div>
-                ) : (
-                    <div className="flex flex-col gap-1">
-                        <p className="font-semibold text-[var(--text-secondary)]">Bem-vindo ao {commerceName}</p>
-                        <p className="text-xs text-[var(--text-secondary)]">
-                            Entre ou crie uma conta para gerenciar seus agendamentos.
-                        </p>
-                    </div>
-
-
-
-                )}
-
+        
             </div>
             <div className="flex flex-col gap-3 p-3 border-b border-solid border-zinc-700">
                 <SheetClose asChild>
@@ -87,7 +76,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
 
                 <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
                     <Link href={`${base}/bookings`}>
-                    <CalendarIcon size={18} className="mr-2" />Agendamentos
+                    <PencilIcon size={18} className="mr-2" />Editar Serviços
                     </Link>
                 </Button>
 
@@ -172,4 +161,4 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
     );
 }
 
-export default SidebarSheet;
+export default SidebarOwner;

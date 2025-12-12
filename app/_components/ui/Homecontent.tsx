@@ -18,14 +18,13 @@ type HomeContentProps = {
   commerceId: string;
   basePath: string;
   commerceName: string;
-  UserName: string;
   searchParams?: {
     search?: string;
   };
 };
 export const dynamic = "force-dynamic";
 
-export default async function HomeContent({ commerceId, basePath, commerceName, UserName, searchParams }: HomeContentProps) {
+export default async function HomeContent({ commerceId, basePath, commerceName, searchParams }: HomeContentProps) {
   const today = new Date();
   const formattedDate = today.toLocaleDateString("pt-BR", {
     weekday: "long",

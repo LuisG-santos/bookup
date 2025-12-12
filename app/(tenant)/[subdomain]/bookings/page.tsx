@@ -18,7 +18,7 @@ type PageProps = {
 };
 
 export default async function BookingsPage({ params }: PageProps) {
-    const { subdomain } = await params; // 👈 agora sim
+    const { subdomain } = await params; 
 
     const basePath = `/${subdomain}`;
 
@@ -91,7 +91,7 @@ export default async function BookingsPage({ params }: PageProps) {
     );
 
     return (
-        <div className="relative min-h-screen flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
+        <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
             <div className="relative w-full">
                 <Button
                     size="icon"
@@ -119,17 +119,17 @@ export default async function BookingsPage({ params }: PageProps) {
             </div>
 
             <main className="flex flex-1 flex-col items-center justify-start p-5 mt-10">
-                <h1 className="text-xl">Meus Agendamentos</h1>
+                <h1 className="text-xl text-[var(--text-on-background)]">Meus Agendamentos</h1>
 
                 {activeBookings.length === 0 ? (
-                    <p className="mt-4 text-sm text-zinc-500">
+                    <p className="mt-4 text-sm text-zinc-500 text-[var(--text-on-background)]">
                         Você não possui agendamentos.
                     </p>
                 ) : (
                     activeBookings.map((booking) => (
                         <div key={booking.id} className="w-full max-w-md mt-4">
                             <div className="flex-1">
-                                <Card className="">
+                                <Card className="bg-[var(--primary)] shadow-[0_5px_7px_rgba(0,0,0,.55)]">
                                     <CardHeader className="flex justify-between">
                                         <h3 className="text-xl font-semibold">{booking.service?.name}</h3>
                                         <Badge className={`ml-2 h-7 w-20 ${StatusColor(booking.status)} `}>{translateStatus(booking.status)}</Badge>
@@ -167,7 +167,7 @@ export default async function BookingsPage({ params }: PageProps) {
                                 {historyBookings.map((booking) => (
                                     <Card
                                         key={booking.id}
-                                        className="mb-4 opacity-60 bg-zinc-900 border border-zinc-800"
+                                        className="mb-4 bg-[var(--primary)] text-[var(--text-on-background)] opacity-60 border border-zinc-800"
                                     >
                                         <CardContent className="p-4">
                                             <div className="flex justify-between">

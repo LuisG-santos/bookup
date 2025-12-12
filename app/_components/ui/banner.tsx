@@ -11,8 +11,8 @@ export function ClientBanner({ className, title, subtitle, imageUrl }: BannerPro
 	return (
 		<section
 			className={[
-				"flex w-full flex-col rounded-3xl bg-[#1A1B1F] px-6 py-10 text-white",
-				"shadow-[0_20px_80px_rgba(0,0,0,.55)] md:flex-row md:items-center md:justify-between",
+				"flex w-full flex-col rounded-3xl bg-[var(--primary)] px-6 py-10 text-white",
+				"shadow-[0_10px_20px_rgba(0,0,0,.55)] md:flex-row md:items-center md:justify-between",
 				"md:px-10 md:py-12 lg:px-16 lg:py-14",
 				className,
 			]
@@ -23,10 +23,10 @@ export function ClientBanner({ className, title, subtitle, imageUrl }: BannerPro
 		
 
 				<header className="space-y-3">
-					<h2 className="text-3xl font-semibold leading-tight tracking-tight text-balance md:text-4xl">
+					<h2 className="text-3xl text-[var(--text-on-primary)] font-semibold leading-tight tracking-tight text-balance md:text-4xl">
 						{title}
 					</h2>
-					<p className="text-base text-white/70 md:text-lg">
+					<p className="text-base text-[var(--text-on-primary)] md:text-lg">
 						{subtitle}
 					</p>
 				</header>

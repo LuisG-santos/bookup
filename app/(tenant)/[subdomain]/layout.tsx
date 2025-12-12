@@ -43,7 +43,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
   return (
     <div
       style={themeVariables}
-      className="min-h-screen bg-background text-foreground"
+      className="min-h-screen bg-[var(--background)] text-[var(--foreground)]"
     >
       <AuthProvider>
         <Toaster position="top-center" />

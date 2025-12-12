@@ -86,7 +86,7 @@ model Commerce {
   phones          String[]   // pode ter vários telefones
   instagram       String?    // @barbearia_x
   description     String?
-  imageURL        String?    // logo / foto principal
+  imageURL        String    // logo / foto principal
 
   // Personalização (tenant)
   primaryColor    String

@@ -9,7 +9,6 @@ type PageProps = {
 };
 
 export default async function TenantPage({ params, searchParams }: PageProps) {
-  // 1) Desembrulha o params (é um Promise agora)
   const { subdomain } = await params;
   const sp = (await searchParams) ?? {};
 

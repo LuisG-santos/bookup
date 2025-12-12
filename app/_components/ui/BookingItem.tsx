@@ -58,7 +58,7 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
   return (
     <>
       <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Próximos Agendamentos</h2>
-      <Card className="mt-6 p-3">
+      <Card className="mt-6 p-3 bg-[var(--primary)] shadow-[0_10px_20px_rgba(0,0,0,.55)]">
         <CardContent className="flex justify-between p-0 ">
 
           {/*Div esquerda */}

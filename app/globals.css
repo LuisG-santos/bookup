@@ -45,6 +45,16 @@
     --radius: 0.5rem;
   }
 
+  [data-radix-portal] {
+  --background: var(--background);
+  --primary: var(--primary);
+  --secondary: var(--secondary);
+  --text-on-background: var(--text-on-background);
+  --text-on-primary: var(--text-on-primary);
+  --text-on-secondary: var(--text-on-secondary);
+}
+
+
   /* Se quiser tema dark separado no futuro */
   .dark {
     --background: 225 9% 9%;
