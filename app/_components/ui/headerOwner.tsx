@@ -1,54 +1,52 @@
-import { MenuIcon, Sidebar } from "lucide-react";
+import {  MenuIcon, Sidebar } from "lucide-react";
 import { Button } from "./button";
 import { Card, CardContent } from "./card";
-import Image from "next/image";
-import { Sheet, SheetTrigger, } from "./sheet";
-import SidebarSheet from "../sidebar-sheet";
-import SidebarOwner from "../sidebar-owner";
+import {Sheet, SheetTrigger,} from "./sheet";
 import { db } from "@/app/_lib/prisma";
+import SidebarOwner from "../sidebar-owner";
 
 type HeaderProps = {
-   commerceId: string;
+    subdomain: string;
+    commerceName: string;
 };
 
-export default async function HeaderOwner ({ commerceId }: HeaderProps) {
 
-    const commerce = await db.commerce.findUnique({
-        where: { id: commerceId },
+export default async function HeaderOwner({ subdomain, commerceName }: HeaderProps) {
+
+    const commerceLogo = await db.commerce.findUnique({
+        where: { subdomain },
         select: {
+            id: true,
             imageURL: true,
-         }
+        },
     });
+    const logo = commerceLogo?.imageURL || "/default-logo.png";
 
-    if (!commerce) {
-        return null;
-    }
-   
     return (
         <Card className="h-24 bg-[var(--primary)] rounded-none">
             <CardContent className="flex flex-row justify-between items-center h-full px-4 py-0">
                 <div className="flex h-full items-center">
-                    <Image
-                        src={commerce.imageURL}
+                    <img
+						src={logo}
                         alt="Logo"
                         width={120}
                         height={32}
                         className="h-12 w-auto object-contain block md:hidden"
-                        priority
+                       
                     />
-                    <Image
-                        src={commerce.imageURL}
+                    <img
+						src={logo}
                         alt="Logo"
                         width={120}
                         height={32}
                         className="h-12 w-auto object-contain hidden md:block"
-                        priority
+                        
                     />
 
 
 
                 </div>
-
+                
 
                 <Sheet>
                     <SheetTrigger asChild>
@@ -56,7 +54,7 @@ export default async function HeaderOwner ({ commerceId }: HeaderProps) {
                             <MenuIcon />
                         </Button>
                     </SheetTrigger>
-                    <SidebarOwner commerce={commerceId} />
+                   <SidebarOwner commerceName={commerceName} />
                 </Sheet>
 
 
@@ -69,3 +67,4 @@ export default async function HeaderOwner ({ commerceId }: HeaderProps) {
 
     );
 }
+

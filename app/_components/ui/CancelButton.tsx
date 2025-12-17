@@ -47,7 +47,6 @@ export function CancelButton({ bookingId }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <div className="flex justify-end mr-4">
                 <DialogTrigger asChild>
                     <Button
                         size="sm"
@@ -56,34 +55,36 @@ export function CancelButton({ bookingId }: Props) {
                         Cancelar
                     </Button>
                 </DialogTrigger>
-            </div>
-
+            
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Cancelar agendamento</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-white">Cancelar agendamento</DialogTitle>
+                    <DialogDescription className="text-white">
                         Tem certeza que deseja cancelar este agendamento? Essa ação não pode ser desfeita.
                     </DialogDescription>
                 </DialogHeader>
 
                 <DialogFooter>
+                    <div className="flex justify-center gap-4">
                     <Button
                         variant="outline"
                         onClick={() => setOpen(false)}
                         disabled={isLoading}
+                        className="text-white w-20"
                     >
                         Voltar
                     </Button>
-                    <div className="flex justify-end mr-4">
-                        <Button
-                            size="sm"
-                            className="w-20 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
-                            onClick={handleCancel}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? "Cancelando..." : "Cancelar"}
-                        </Button>
+
+                    <Button
+                        size="sm"
+                        className="w-20 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
+                        onClick={handleCancel}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Cancelando..." : "Cancelar"}
+                    </Button>
                     </div>
+
                 </DialogFooter>
             </DialogContent>
         </Dialog>

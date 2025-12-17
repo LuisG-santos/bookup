@@ -9,7 +9,7 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // ⬇️ AQUI está a correção: await context.params
+    
     const { id } = await context.params;
     const bookingId = id;
 
@@ -37,7 +37,7 @@ export async function PUT(
     const bookingDate = new Date(booking.date);
     const diffMinutes = differenceInMinutes(bookingDate, now);
 
-    // Regra: confirmado só pode cancelar com 1h de antecedência
+    //confirmado só pode cancelar com 1h de antecedência
     if (booking.status === BookingStatus.CONFIRMED && diffMinutes < 60) {
       return NextResponse.json(
         {

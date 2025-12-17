@@ -81,6 +81,7 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
             <p className="text-sm font-semibold">{month.charAt(0).toUpperCase() + month.slice(1)}</p>
             <p className="text-xl font-bold">{day}</p>
             <p className="text-sm">{time}</p>
+            
           </div>
 
 

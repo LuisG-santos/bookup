@@ -9,10 +9,10 @@ async function main() {
   // 1) Commerce (tenant)
   const commerce = await prisma.commerce.create({
     data: {
-      name: 'Belivio Barber Test',
+      name: 'Gus teste',
       address: 'Rua Teste, 123',
-      phones: ['+55 11 91234-5678'],
-      instagram: '@beliviobarber',
+      phones: ['+55 18 99999-9999', '+55 18 98888-8888'],
+      instagram: '@gusbarber',
       description: 'Barbearia de teste para desenvolvimento Belivio.',
       imageURL: 'https://placehold.co/300x150?text=Belivio+Logo',
 
@@ -22,29 +22,17 @@ async function main() {
 
       heroTitle: 'Corte na régua, todos os dias.',
       heroSubtitle: 'Agende seu horário em segundos.',
-      subdomain: 'beliviobarber',
+      subdomain: 'gusteste',
     },
   })
 
   console.log('✔ Commerce criado:', commerce.name)
 
-  // 2) Usuário ADMIN
-  const adminUser = await prisma.user.create({
-    data: {
-      email: 'admin@belivio.com',
-      name: 'Administrador',
-      passwordHash: 'senha_hash_aqui', // depois você troca por hash real
-      role: 'ADMIN',
-      commerceId: commerce.id,
-    },
-  })
-
-  console.log('✔ Usuário admin criado:', adminUser.email)
 
   // 3) 6 serviços
   const servicesData = [
     {
-      name: 'Corte Masculino',
+      name: 'Chapinha',
       description: 'Corte completo com máquina e tesoura.',
       imageURL: 'https://placehold.co/150x150?text=Corte',
       price: 50.0,
