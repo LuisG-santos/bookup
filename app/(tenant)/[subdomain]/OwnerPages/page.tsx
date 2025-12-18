@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { db } from "@/app/_lib/prisma";
-import { MenuIcon, Sidebar } from "lucide-react";
-import SidebarOwner from "@/app/_components/sidebar-owner";
-import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
 import { Button } from "@/app/_components/ui/button";
 import HeaderOwner from "@/app/_components/ui/headerOwner";
 import { Card } from "@/app/_components/ui/card";
+import { notFound } from "next/navigation";
+import { endOfDay, startOfDay } from "date-fns";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
+
 
 type OwnerPageProps = {
     params: Promise<{ subdomain: string }>;
@@ -18,6 +19,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
     const userId = session?.user?.id;
     const { subdomain } = await params;
     const userName = session?.user?.name ?? "Owner";
+    const tz = "America/Sao_Paulo";
 
     const commerce = await db.commerce.findUnique({
         where: { subdomain },
@@ -28,7 +30,11 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
     });
 
     if (!commerce) {
-        throw new Error("Comércio não encontrado");
+        notFound()
+    }
+
+    if (!userId){
+        throw new Error("Usuário não autenticado");
     }
 
     const membership = await db.commerceMembership.findFirst({
@@ -39,11 +45,12 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
         },
     });
 
-    if (!membership || membership.role !== "OWNER") {
-        throw new Error("Usuário não autorizado");
+    if (!membership) {
+        notFound()
     }
 
     const today = new Date();
+
     const formattedDate = today.toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "2-digit",
@@ -71,10 +78,46 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
 
 
 
+    const now = new Date();
+    const nowInTz = toZonedTime(now, tz);
+    const startLocal = startOfDay(nowInTz);
+    const endLocal = endOfDay(nowInTz);
 
+    const dayStartUtc = fromZonedTime(startLocal, tz);
+    const dayEndUtc = fromZonedTime(endLocal, tz);
 
-    const nextBooking = bookings.filter(booking => booking.status !== "CONFIRMED" && booking.date >= new Date()).sort((a, b) => a.date.getTime() - b.date.getTime())[0];
+    const todayBookings = bookings.filter(booking => booking.status == "CONFIRMED" && booking.date >= dayStartUtc &&  booking.date <= dayEndUtc);
+    
+    const nextFuture = bookings.find((booking) => booking.status == "CONFIRMED" && booking.date > now);
+    
+    // const nextBooking = bookings.filter(booking => booking.status == "CONFIRMED" && booking.date >= new Date()).sort((a, b) => a.date.getTime() - b.date.getTime())[0];
 
+    const todayBookingsConfirmed = await db.booking.findMany({
+        where: {
+            commerceId: commerce.id,
+            status: "CONFIRMED",
+            date: {
+                gte: dayStartUtc,
+                lte: dayEndUtc,
+            },
+        },
+        include: {
+            service: {
+                select: {
+                    name: true,
+                },
+            },
+            user: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+        orderBy: { date: "asc" },
+    });
+
+    const nextToday = todayBookingsConfirmed.find((booking) => booking.date >= now);
+    const nextBooking = nextToday ?? nextFuture;
 
     return (
         <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
@@ -88,18 +131,27 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
 
             <div>
                 <Card className="m-5 p-5 bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)]">
-                    <h2 className="text-lg font-bold text-[var(--text-on-primary)]">Próximo agendamento</h2>
+                    <h2 className="text-lg font-bold text-[var(--text-on-primary)]">Agendamentos de hoje </h2>
                     {nextBooking ? (
                         <div className="">
                             <p className="text-[var(--text-on-primary)] text-lg font-semibold">{nextBooking.user.name}</p>
                             <div className="flex justify-between pt-1">
-                                <p className="text-[var(--text-on-primary)] text-sm">{nextBooking.service.name}</p>
-                                <p className="text-[var(--text-on-primary)] text-sm">{new Date(nextBooking.date).toLocaleTimeString("pt-BR",
+                                <p className="text-[var(--text-on-primary)] text-sm mt-2">{nextBooking.service.name}</p>
+                                <div className="flex flex-col">
+                                    <p className="text-[var(--text-on-primary)] text-sm">{new Date(nextBooking.date).toLocaleTimeString("pt-BR",
                                     {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     }
                                 )}</p>
+                                <p className="text-sm">{new Date(nextBooking.date).toLocaleDateString("pt-BR",
+                                    {
+                                        day: "2-digit",
+                                        month: "short",                                      
+                                    }
+                                )}</p>
+                                </div>
+                                
                             </div>
 
                             <div className="flex justify-between mt-5">
@@ -114,7 +166,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
 
                         </div>
                     ) : (
-                        <p className="mt-3 text-[var(--text-on-primary)]">Nenhum agendamento futuro encontrado.</p>
+                        <p className="mt-3 text-[var(--text-on-primary)]">Nenhum agendamento para hoje.</p>
                     )}
                 </Card>
             </div>
