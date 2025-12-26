@@ -11,7 +11,7 @@ import {
 
 
 import Link from "next/link";
-import { CalendarIcon, HomeIcon, ChevronRightIcon} from "lucide-react";
+import { CalendarIcon, HomeIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -51,7 +51,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                                 src={data?.user?.image ?? ""}
                                 alt="User Avatar"
                             />
-                            
+
                         </Avatar>
                         <div className="flex flex-col justify-center leading-tight  ">
                             <p className="font-semibold">{data?.user?.name}</p>
@@ -85,13 +85,19 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                     </Button>
                 </SheetClose>
 
-                <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
-                    <Link href={`${base}/bookings`}>
-                    <CalendarIcon size={18} className="mr-2" />Agendamentos
-                    </Link>
-                </Button>
+                {isAuthenticated && (
+
+                    <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
+                        <Link href={`${base}/bookings`}>
+                            <CalendarIcon size={18} className="mr-2" />Agendamentos
+                        </Link>
+                    </Button>
+                )}
+
+
 
                 {isAuthenticated && (
+
                     <Accordion type="single" collapsible>
                         <AccordionItem value="item-1">
                             <AccordionTrigger className="hover:no-underline hover:bg-zinc-800">
@@ -128,8 +134,8 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
 
                                             </div>
                                             <div className="grid gap-3">
-                                                <Label htmlFor="username-1" className="text-[var(--text-on-primary)]">Username</Label>
-                                                <Input id="username-1" name="username" className="text-[var(--text-on-primary)]" defaultValue={data?.user?.name ?? ""} />
+                                                <Label htmlFor="username-1" className="text-white">Username</Label>
+                                                <Input id="username-1" name="username" className="text-white" defaultValue={data?.user?.name ?? ""} />
                                             </div>
                                         </div>
                                         <DialogFooter>

@@ -148,7 +148,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
 
   return (
     <div className="bg-[var(--background)] text-[var(--text-on-background)] min-h-screen">
-      <Header subdomain={basePath} commerceName={commerceName} />
+      <Header subdomain={basePath} commerceName={commerceName}/>
 
       <div className="p-5">
         <h2 className="text-xl font-bold ">Olá, {userName} !</h2>

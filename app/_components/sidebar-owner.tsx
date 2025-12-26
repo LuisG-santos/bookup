@@ -11,7 +11,7 @@ import {
 
 
 import Link from "next/link";
-import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge } from "lucide-react";
+import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge, CalendarClockIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -21,19 +21,20 @@ import Image from "next/image";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-type SidebarSheetProps = {
-    commerceName: string;
-};
 
-const SidebarOwner = ({ commerceName }: SidebarSheetProps) => {
+
+export default function SidebarOwner  () { 
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
-
-    const base = subdomain ? `/${subdomain}` : '/';
+    const base = subdomain ? `/${subdomain}/OwnerPages` : "/OwnerPages";
     const loginPage = subdomain ? `/${subdomain}/login` : '/login';
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
     const handleLogout = () => signOut();
+
+    console.log("params", params);
+    console.log("subdomain", subdomain);
+    console.log("base", base);
 
     return (
 
@@ -75,8 +76,8 @@ const SidebarOwner = ({ commerceName }: SidebarSheetProps) => {
                 </SheetClose>
 
                 <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
-                    <Link href={`${base}/bookings`}>
-                    <PencilIcon size={18} className="mr-2" />Editar Serviços
+                    <Link href={`${base}/bookingPending`}>
+                    <CalendarClockIcon size={18} className="mr-2" />Agendamentos pendentes
                     </Link>
                 </Button>
 
@@ -160,5 +161,3 @@ const SidebarOwner = ({ commerceName }: SidebarSheetProps) => {
         </SheetContent>
     );
 }
-
-export default SidebarOwner;

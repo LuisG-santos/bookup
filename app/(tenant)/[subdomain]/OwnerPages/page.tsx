@@ -1,12 +1,15 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { db } from "@/app/_lib/prisma";
-import { Button } from "@/app/_components/ui/button";
 import HeaderOwner from "@/app/_components/ui/headerOwner";
-import { Card } from "@/app/_components/ui/card";
+import { addDays } from "date-fns";
 import { notFound } from "next/navigation";
 import { endOfDay, startOfDay } from "date-fns";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
+import NextBookingCard from "@/app/_components/ui/nextBookingsCard";
+import { CheckLineIcon, ChevronRightIcon, CircleCheckIcon, ClipboardCheckIcon, ClockIcon } from "lucide-react";
+import FooterPage from "@/app/_components/ui/Footer";
+import Link from "next/link";
 
 
 type OwnerPageProps = {
@@ -26,6 +29,8 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
         select: {
             id: true,
             imageURL: true,
+            name: true,
+            heroImageURL: true,
         },
     });
 
@@ -33,7 +38,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
         notFound()
     }
 
-    if (!userId){
+    if (!userId) {
         throw new Error("Usuário não autenticado");
     }
 
@@ -64,6 +69,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
             service: {
                 select: {
                     name: true,
+                    duration: true,
                 },
             },
             user: {
@@ -86,11 +92,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
     const dayStartUtc = fromZonedTime(startLocal, tz);
     const dayEndUtc = fromZonedTime(endLocal, tz);
 
-    const todayBookings = bookings.filter(booking => booking.status == "CONFIRMED" && booking.date >= dayStartUtc &&  booking.date <= dayEndUtc);
-    
-    const nextFuture = bookings.find((booking) => booking.status == "CONFIRMED" && booking.date > now);
-    
-    // const nextBooking = bookings.filter(booking => booking.status == "CONFIRMED" && booking.date >= new Date()).sort((a, b) => a.date.getTime() - b.date.getTime())[0];
+
 
     const todayBookingsConfirmed = await db.booking.findMany({
         where: {
@@ -105,6 +107,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
             service: {
                 select: {
                     name: true,
+                    duration: true,
                 },
             },
             user: {
@@ -116,12 +119,32 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
         orderBy: { date: "asc" },
     });
 
+    const next7DaysStartUtc = dayStartUtc; // hoje 00:00 no fuso
+    const next7DaysEndLocal = addDays(endLocal, 7);
+    const next7DaysEndUtc = fromZonedTime(next7DaysEndLocal, tz);
+
+    const next7DaysBookings = await db.booking.findMany({
+        where: {
+            commerceId: commerce.id,
+            status: { in: ["CONFIRMED", "PENDING"] },
+            date: {
+                gte: next7DaysStartUtc,
+                lte: next7DaysEndUtc,
+            },
+        },
+    });
+
+    const confirmedBookings = bookings.filter(booking => booking.status === "CONFIRMED");
+
+    const pendingBookings = bookings.filter(booking => booking.status === "PENDING");
+
     const nextToday = todayBookingsConfirmed.find((booking) => booking.date >= now);
-    const nextBooking = nextToday ?? nextFuture;
+    const nextBooking = nextToday;
 
     return (
         <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
-            <HeaderOwner subdomain={subdomain} commerceName={commerce.imageURL} />
+
+            <HeaderOwner subdomain={subdomain} />
 
             <div className="flex flex-col p-5">
                 <h1 className="text-2xl font-bold">Olá, {userName}</h1>
@@ -130,45 +153,169 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
             </div>
 
             <div>
-                <Card className="m-5 p-5 bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)]">
-                    <h2 className="text-lg font-bold text-[var(--text-on-primary)]">Agendamentos de hoje </h2>
-                    {nextBooking ? (
-                        <div className="">
-                            <p className="text-[var(--text-on-primary)] text-lg font-semibold">{nextBooking.user.name}</p>
-                            <div className="flex justify-between pt-1">
-                                <p className="text-[var(--text-on-primary)] text-sm mt-2">{nextBooking.service.name}</p>
-                                <div className="flex flex-col">
-                                    <p className="text-[var(--text-on-primary)] text-sm">{new Date(nextBooking.date).toLocaleTimeString("pt-BR",
-                                    {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    }
-                                )}</p>
-                                <p className="text-sm">{new Date(nextBooking.date).toLocaleDateString("pt-BR",
-                                    {
-                                        day: "2-digit",
-                                        month: "short",                                      
-                                    }
-                                )}</p>
+                <h2 className="pl-5 pt-5 text-xs font-bold uppercase text-gray-400">Agendamentos de hoje</h2>
+                <NextBookingCard nextBooking={nextBooking ?? null} />
+            </div>
+
+            <h2 className="pl-5 pt-5 text-xs font-bold uppercase text-gray-400">Agendamentos</h2>
+
+            <div className="grid grid-cols-2 gap-5 p-5 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2">
+
+                <div className="">
+
+                    <button
+                        className="
+                                group
+                                w-full
+                                rounded-lg
+                                border border-zinc-800
+                                 bg-[var(--primary)]
+                                p-5
+                                text-left
+                                transition
+                                 hover:bg-zinc-900
+                                 hover:border-zinc-800
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-[var(--primary)]
+                                "
+                    >
+                        <Link href={`/${subdomain}/OwnerPages/bookingPending`}>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-3xl font-bold text-white">
+                                        {pendingBookings.length}
+                                    </p>
+                                    <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                                        <ClockIcon className="h-4 w-4" />
+                                        Pendentes
+                                    </p>
                                 </div>
-                                
+
+                                <ChevronRightIcon
+                                    className="
+                                        h-5 w-5
+                                        text-zinc-500
+                                        transition
+                                        group-hover:translate-x-1
+                                        group-hover:text-zinc-300
+                                    "
+                                />
                             </div>
+                        </Link>
+                    </button>
 
-                            <div className="flex justify-between mt-5">
-                                <Button variant="secondary" className="rounded-xl ml-5 w-32 bg-green-500 text-white hover:bg-green-600">
-                                    Concluir
-                                </Button>
 
-                                <Button variant="secondary" className="rounded-xl mr-5 w-32 bg-red-600 text-white hover:bg-red-700">
-                                    Cancelar
-                                </Button>
+                </div>
+                <div className="">
+                    <div
+                        className="
+                                group
+                                w-full
+                                rounded-lg
+                                border border-zinc-800
+                                 bg-[var(--primary)]
+                                p-5
+                                text-left
+                                transition
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-[var(--primary)]
+                                "
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-3xl font-bold text-white">
+                                    {todayBookingsConfirmed.length}
+                                </p>
+                                <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                                    <ClipboardCheckIcon className="h-4 w-4" />
+                                    Hoje
+                                </p>
                             </div>
-
                         </div>
-                    ) : (
-                        <p className="mt-3 text-[var(--text-on-primary)]">Nenhum agendamento para hoje.</p>
-                    )}
-                </Card>
+                    </div>
+
+                </div>
+
+                <div className="">
+                     <button
+                        className="
+                                group
+                                w-full
+                                rounded-lg
+                                border border-zinc-800
+                                 bg-[var(--primary)]
+                                p-5
+                                text-left
+                                transition
+                                 hover:bg-zinc-900
+                                 hover:border-zinc-800
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-[var(--primary)]
+                                "
+                    >
+                        <Link href={`/${subdomain}/OwnerPages/bookingsConfirm`}>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-3xl font-bold text-white">
+                                        {confirmedBookings.length}
+                                    </p>
+                                    <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                                        <CheckLineIcon className="h-4 w-4" />
+                                        Confirmados
+                                    </p>
+                                </div>
+
+                                <ChevronRightIcon
+                                    className="
+                                        h-5 w-5
+                                        text-zinc-500
+                                        transition
+                                        group-hover:translate-x-1
+                                        group-hover:text-zinc-300
+                                    "
+                                />
+                            </div>
+                        </Link>
+                    </button>
+
+                </div>
+
+                <div className="">
+                    <div
+                        className="
+                                group
+                                w-full
+                                rounded-lg
+                                border border-zinc-800
+                                 bg-[var(--primary)]
+                                p-5
+                                text-left
+                                transition
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-[var(--primary)]
+                                "
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-3xl font-bold text-white">
+                                    {next7DaysBookings.length}
+                                </p>
+                                <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                                    <ClockIcon className="h-4 w-4" />
+                                    Próximos 7 dias
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div className="mt-auto">
+                <FooterPage commerceId={commerce.id} />
             </div>
         </div>
     );

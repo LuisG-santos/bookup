@@ -2,8 +2,6 @@ import { Card } from "./card";
 import { CardContent } from "./card";
 import { Badge } from "./badge";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { BookingStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -27,12 +25,14 @@ const STATUS_LABELS: Record<BookingStatus, string> = {
   PENDING: "Pendente",
   CONFIRMED: "Confirmado",
   CANCELED: "Cancelado",
+  FINALIZED: "Finalizado",
 };
 
 const STATUS_CLASSES: Record<BookingStatus, string> = {
   PENDING: "bg-yellow-600",
   CONFIRMED: "bg-green-600",
   CANCELED: "bg-red-600",
+  FINALIZED: "bg-gray-600",
 };
 
 
@@ -43,7 +43,7 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
         <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">
           Agendamentos
         </h2>
-        <div className="m-5 px-5 py-4 text-sm font-semibold text-zinc-400">
+        <div className="m-5 px-4 py-4 text-sm font-semibold text-zinc-400">
           Você ainda não tem agendamentos futuros.
         </div>
       </>
@@ -75,7 +75,7 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
               <p className="text-sm">{user.name}</p>
             </div>
           </div>
-
+      
           {/*Div direita */}
           <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid border-zinc-400">
             <p className="text-sm font-semibold">{month.charAt(0).toUpperCase() + month.slice(1)}</p>

@@ -58,6 +58,7 @@ export async function PUT(
     if (subdomain) {
       revalidatePath(`/${subdomain}`);
       revalidatePath(`/${subdomain}/bookings`);
+      revalidatePath(`/${subdomain}/OwnerPages/bookingPending`);
     }
 
     return NextResponse.json(canceledBooking, { status: 200 });

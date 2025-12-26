@@ -52,9 +52,6 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
                 <div className="flex flex-1 flex-col py-3">
                     <h3 className="font-semibold text-[var(--text-on-primary)]">{services.name}</h3>
                     <p className="text-sm text-[var(--text-on-primary)] line-clamp-3">{services.description}</p>
-                    <p className="text-sm text-[var(--text-on-primary)] line-clamp-3">
-                        {String(services.duration)} minutos
-                    </p>
                     <div className=" mt-auto space-y-3 pt-3">
                         <div className="flex gap-2">
                             <p className="text-sm font-medium text-[var(--text-on-primary)] mb-2">

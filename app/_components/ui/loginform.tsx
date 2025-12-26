@@ -22,12 +22,13 @@ export default function LoginForms({ heroImageURL }: LoginFormsProps) {
   };
 
   return ( 
-    <div className="relative min-h-screen flex items-end w-full bg-gray-1000">
+    <div className="relative h-screen flex items-end w-full bg-gray-1000">
       
       <Image
-        src="/backgroundLogin.png"
-        alt="Login Illustration"
+        src="/backgroundLogin.PNG"
+        alt="bg"
         fill
+        sizes="100vw"
         className="object-cover pb-40"
         priority
       />

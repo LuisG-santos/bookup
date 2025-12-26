@@ -57,6 +57,8 @@ export default async function BookingsPage({ params }: PageProps) {
                 return "bg-green-600";
             case "CANCELED":
                 return "bg-red-600";
+            case "FINALIZED":
+                return "bg-gray-600";
             default:
                 return "bg-yellow-600";
         }
@@ -70,6 +72,8 @@ export default async function BookingsPage({ params }: PageProps) {
                 return "Confirmado";
             case "CANCELED":
                 return "Cancelado";
+            case "FINALIZED":
+                return "Finalizado";
             default:
                 return status;
         }
@@ -86,7 +90,8 @@ export default async function BookingsPage({ params }: PageProps) {
     const historyBookings = bookings.filter(
         (b) =>
             b.status === BookingStatus.CANCELED ||
-            b.date < todayStart
+            b.date < todayStart ||
+            b.status === BookingStatus.FINALIZED
     );
 
 

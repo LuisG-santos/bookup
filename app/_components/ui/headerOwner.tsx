@@ -7,11 +7,10 @@ import SidebarOwner from "../sidebar-owner";
 
 type HeaderProps = {
     subdomain: string;
-    commerceName: string;
 };
 
 
-export default async function HeaderOwner({ subdomain, commerceName }: HeaderProps) {
+export default async function HeaderOwner({ subdomain }: HeaderProps) {
 
     const commerceLogo = await db.commerce.findUnique({
         where: { subdomain },
@@ -22,8 +21,8 @@ export default async function HeaderOwner({ subdomain, commerceName }: HeaderPro
     });
     const logo = commerceLogo?.imageURL || "/default-logo.png";
 
-    return (
-        <Card className="h-24 bg-[var(--primary)] rounded-none">
+        return (
+		<Card className="h-24 bg-[var(--primary)] rounded-none">
             <CardContent className="flex flex-row justify-between items-center h-full px-4 py-0">
                 <div className="flex h-full items-center">
                     <img
@@ -54,7 +53,7 @@ export default async function HeaderOwner({ subdomain, commerceName }: HeaderPro
                             <MenuIcon />
                         </Button>
                     </SheetTrigger>
-                   <SidebarOwner commerceName={commerceName} />
+                   <SidebarOwner/>
                 </Sheet>
 
 

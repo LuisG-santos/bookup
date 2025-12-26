@@ -4,14 +4,17 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/app/_components/ui/button";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { cn } from "@/app/_lib/utils";
+
 import { set } from "date-fns";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
 
 
 type Props = {
     bookingId: string;
+    className?: string;
 }
-export function CancelButton({ bookingId }: Props) {
+export function CancelButton({ bookingId, className }: Props) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
@@ -49,9 +52,11 @@ export function CancelButton({ bookingId }: Props) {
         <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button
-                        size="sm"
-                        className="w-20 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
-                    >
+          className={cn(
+            "w-28 px-2 py-2 text-xs rounded-xl sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800",
+            className
+          )}
+        >
                         Cancelar
                     </Button>
                 </DialogTrigger>
@@ -77,7 +82,7 @@ export function CancelButton({ bookingId }: Props) {
 
                     <Button
                         size="sm"
-                        className="w-20 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
+                        className="w-28 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
                         onClick={handleCancel}
                         disabled={isLoading}
                     >
