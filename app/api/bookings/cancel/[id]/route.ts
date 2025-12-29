@@ -3,15 +3,17 @@ import { db } from "@/app/_lib/prisma";
 import { BookingStatus } from "@prisma/client";
 import { differenceInMinutes } from "date-fns";
 import { revalidatePath } from "next/cache";
+import { parse } from "path";
 
 export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    
+
     const { id } = await context.params;
     const bookingId = id;
+    const date = new Date();
 
     const booking = await db.booking.findUnique({
       where: { id: bookingId },
@@ -33,12 +35,17 @@ export async function PUT(
       );
     }
 
+
     const now = new Date();
     const bookingDate = new Date(booking.date);
     const diffMinutes = differenceInMinutes(bookingDate, now);
-
+    
     //confirmado só pode cancelar com 1h de antecedência
-    if (booking.status === BookingStatus.CONFIRMED && diffMinutes < 60) {
+    if (
+      booking.status === BookingStatus.CONFIRMED &&
+      diffMinutes < 60 &&
+      diffMinutes >= 0
+    ) {
       return NextResponse.json(
         {
           error:

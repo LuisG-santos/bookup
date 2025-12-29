@@ -6,11 +6,10 @@ import FooterPage from "@/app/_components/ui/Footer";
 import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
 import { db } from "@/app/_lib/prisma";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { CalendarCheckIcon, CalendarClockIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
+import { CalendarCheckIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { notFound } from "next/navigation"
-import { ConfirmButton } from "@/app/_components/ui/ConfirmButton";
 import { Badge } from "@/app/_components/ui/badge";
 
 type BookingPendingsProps = {
@@ -37,6 +36,10 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
     if (!commerce) {
         notFound()
     }
+    
+    if (!userId) {
+        notFound();
+    }
 
     const membership = await db.commerceMembership.findFirst({
         where: {
@@ -48,10 +51,6 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
 
     if (!membership) {
         notFound()
-    }
-
-    if (!userId) {
-        notFound();
     }
 
     const confirmBookings = await db.booking.findMany({
@@ -89,7 +88,7 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
                     </Link>
                 </Button>
 
-                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-xl font-semibold">
+                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-lg font-semibold uppercase">
                     Confirmados
                 </h2>
 
@@ -162,7 +161,7 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
 
                                         <div className="flex w-full items-center border-t space-x-5 border-zinc-700 p-3 mt-5">
 
-                                            <CancelButton bookingId={booking.id} className="w-full" />
+                                            <CancelButton bookingId={booking.id} />
                                         </div>
 
                                     </div>
@@ -176,7 +175,6 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
                             Nenhum agendamento confirmado.
                         </p>
                     </div>
-
                 )}
 
             </div>

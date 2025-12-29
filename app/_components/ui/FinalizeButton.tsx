@@ -45,11 +45,11 @@ export function FinalizeButton({ bookingId }: Props) {
                     <div className="w-28">
                     <Button
                     
-                        className="w-full px-2 py-2 text-xs rounded-xl sm:px-4 sm:py-3 sm:text-base bg-zinc-500 hover:bg-zinc-600"
+                        className="w-full px-2 py-2 text-xs rounded-xl sm:px-4 sm:py-3 sm:text-base bg-green-500 hover:bg-green-600"
                         onClick={handleFinalize}
                         disabled={isLoading}
                     >
-                        {isLoading ? "Finalizando..." : "Finalizado"}
+                        {isLoading ? "Finalizando..." : "Finalizar"}
                     </Button>
                     </div>
 

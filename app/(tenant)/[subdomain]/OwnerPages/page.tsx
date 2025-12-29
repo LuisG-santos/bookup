@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import { endOfDay, startOfDay } from "date-fns";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import NextBookingCard from "@/app/_components/ui/nextBookingsCard";
-import { CheckLineIcon, ChevronRightIcon, CircleCheckIcon, ClipboardCheckIcon, ClockIcon } from "lucide-react";
+import { CheckLineIcon, ChevronRightIcon, ClipboardCheckIcon, ClockIcon } from "lucide-react";
 import FooterPage from "@/app/_components/ui/Footer";
 import Link from "next/link";
 
@@ -138,8 +138,10 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
 
     const pendingBookings = bookings.filter(booking => booking.status === "PENDING");
 
-    const nextToday = todayBookingsConfirmed.find((booking) => booking.date >= now);
-    const nextBooking = nextToday;
+    const confirmedToday = todayBookingsConfirmed.filter(booking => booking.status === "CONFIRMED");
+    const upcoming = confirmedToday.find(booking => booking.date >= now);
+    const overdue = [...confirmedToday].reverse().find(booking => booking.date < now);
+    const nextBooking = upcoming ?? overdue ?? null;
 
     return (
         <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
@@ -204,11 +206,10 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                             </div>
                         </Link>
                     </button>
-
-
                 </div>
+
                 <div className="">
-                    <div
+                    <button
                         className="
                                 group
                                 w-full
@@ -218,28 +219,42 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                 p-5
                                 text-left
                                 transition
+                                 hover:bg-zinc-900
+                                 hover:border-zinc-800
                                 focus:outline-none
                                 focus:ring-2
                                 focus:ring-[var(--primary)]
                                 "
                     >
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-3xl font-bold text-white">
-                                    {todayBookingsConfirmed.length}
-                                </p>
-                                <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
-                                    <ClipboardCheckIcon className="h-4 w-4" />
-                                    Hoje
-                                </p>
+                        <Link href={`/${subdomain}/OwnerPages/bookingsToday`}>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-3xl font-bold text-white">
+                                        {todayBookingsConfirmed.length}
+                                    </p>
+                                    <p className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
+                                        <ClipboardCheckIcon className="h-4 w-4" />
+                                        Hoje
+                                    </p>
+                                </div>
+
+                                <ChevronRightIcon
+                                    className="
+                                        h-5 w-5
+                                        text-zinc-500
+                                        transition
+                                        group-hover:translate-x-1
+                                        group-hover:text-zinc-300
+                                    "
+                                />
                             </div>
-                        </div>
-                    </div>
+                        </Link>
+                    </button>
 
                 </div>
 
                 <div className="">
-                     <button
+                    <button
                         className="
                                 group
                                 w-full

@@ -13,6 +13,7 @@ import { BookingStatus } from "@prisma/client";
 import { CancelButton } from "@/app/_components/ui/CancelButton";
 import { startOfDay } from "date-fns";
 import { Avatar, AvatarImage } from "@/app/_components/ui/avatar";
+import { expirePendingBookings } from "@/app/_lib/expirePendingBookings";
 
 type PageProps = {
     params: Promise<{ subdomain: string }>;
@@ -36,6 +37,8 @@ export default async function BookingsPage({ params }: PageProps) {
     if (!commerce) {
         throw new Error("Comércio não encontrado");
     }
+
+    await expirePendingBookings({ commerceId: commerce.id, graceMinutes: 10 });
 
     const bookings = await db.booking.findMany({
         where: { commerceId: commerce.id, userId },
@@ -93,6 +96,7 @@ export default async function BookingsPage({ params }: PageProps) {
             b.date < todayStart ||
             b.status === BookingStatus.FINALIZED
     );
+
 
 
     return (

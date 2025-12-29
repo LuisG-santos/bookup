@@ -11,7 +11,7 @@ import {
 
 
 import Link from "next/link";
-import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge, CalendarClockIcon } from "lucide-react";
+import { CalendarIcon, Home, HomeIcon, LogOutIcon, ChevronRightIcon, PencilIcon, Badge, CalendarClockIcon, CalendarCheckIcon, CheckLineIcon, ClipboardCheckIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -77,9 +77,17 @@ export default function SidebarOwner  () {
 
                 <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
                     <Link href={`${base}/bookingPending`}>
-                    <CalendarClockIcon size={18} className="mr-2" />Agendamentos pendentes
+                    <CalendarClockIcon size={18} className="mr-2" />Pendencias
                     </Link>
                 </Button>
+
+                 <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
+                    <Link href={`${base}/bookingsToday`}>
+                    <ClipboardCheckIcon size={18} className="mr-2" />Agendamentos de hoje
+                    </Link>
+                </Button>
+
+                
 
                 {isAuthenticated && (
                     <Accordion type="single" collapsible>
@@ -118,8 +126,8 @@ export default function SidebarOwner  () {
 
                                             </div>
                                             <div className="grid gap-3">
-                                                <Label htmlFor="username-1" className="text-[var(--text-on-primary)]">Username</Label>
-                                                <Input id="username-1" name="username" className="text-[var(--text-on-primary)]" defaultValue={data?.user?.name ?? ""} />
+                                                <Label htmlFor="username-1" className="text-white">Username</Label>
+                                                <Input id="username-1" name="username" className="text-white" defaultValue={data?.user?.name ?? ""} />
                                             </div>
                                         </div>
                                         <DialogFooter>

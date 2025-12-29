@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { userId, serviceId, commerceId, date } = body;
-
+  
     if (!userId || !serviceId || !commerceId || !date) {
       return NextResponse.json(
         { error: "Dados obrigatórios ausentes." },
@@ -19,7 +19,6 @@ export async function POST(req: NextRequest) {
 
     const parsedDate = new Date(date);
 
-    
     if (parsedDate < new Date()) {
       return NextResponse.json(
         { error: "A data do agendamento não pode ser no passado." },
@@ -73,6 +72,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    
+
     // 3) criar o booking
     const booking = await db.booking.create({
       data: {
@@ -83,16 +84,17 @@ export async function POST(req: NextRequest) {
         status: BookingStatus.PENDING,
       },
     });
+    
 
     const commerce = await db.commerce.findUnique({
-        where: { id: commerceId },
-        select: { subdomain: true },
-      });
+      where: { id: commerceId },
+      select: { subdomain: true },
+    });
 
     revalidatePath(`/${commerce?.subdomain}`);
-
-    return NextResponse.json(booking, { status: 201 });
     
+    return NextResponse.json(booking, { status: 201 });
+
   } catch (error) {
     console.error("Error creating booking:", error);
     return NextResponse.json(

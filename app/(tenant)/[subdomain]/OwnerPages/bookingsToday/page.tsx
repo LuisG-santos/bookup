@@ -1,29 +1,30 @@
 import SidebarOwner from "@/app/_components/sidebar-owner";
 import { Button } from "@/app/_components/ui/button";
-import { CancelButton } from "@/app/_components/ui/CancelButton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/card";
 import FooterPage from "@/app/_components/ui/Footer";
 import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
-import { db } from "@/app/_lib/prisma";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { CalendarClockIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
-import { getServerSession } from "next-auth";
+import { CalendarCheckIcon, ChevronLeftIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation"
-import { ConfirmButton } from "@/app/_components/ui/ConfirmButton";
+import { getServerSession } from "next-auth";
+import { get } from "http";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { notFound } from "next/navigation";
+import { db } from "@/app/_lib/prisma";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/card";
+import { endOfDay, startOfDay } from "date-fns";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { Badge } from "@/app/_components/ui/badge";
-import { expirePendingBookings } from "@/app/_lib/expirePendingBookings";
 
-type BookingPendingsProps = {
+type BookingTodayProps = {
     params: Promise<{ subdomain: string }>;
 };
 
-export default async function BookingPendings({ params }: BookingPendingsProps) {
 
+export default async function BookingToday({ params }: BookingTodayProps) {
     const { subdomain } = await params;
+    const basePath = `/${subdomain}/OwnerPages`;
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
-    const basePath = `/${subdomain}/OwnerPages`;
+    const tz = "America/Sao_Paulo";
 
     const commerce = await db.commerce.findUnique({
         where: { subdomain },
@@ -39,28 +40,40 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
         notFound()
     }
 
-    const membership = await db.commerceMembership.findFirst({
-        where: {
-            userId,
-            commerceId: commerce.id,
-            role: "OWNER",
-        },
-    });
-
-    if (!membership) {
-        notFound()
-    }
-
     if (!userId) {
         notFound();
     }
 
-   await expirePendingBookings({ commerceId: commerce.id, graceMinutes: 10 });
-                
-    const pendingBookings = await db.booking.findMany({
+    const memberShip = await db.commerceMembership.findFirst({
+        where: {
+            userId,
+            role: "OWNER",
+        },
+        select: {
+            commerceId: true,
+        },
+    });
+
+    if (!memberShip) {
+        notFound();
+    }
+
+    const now = new Date();
+    const nowInTz = toZonedTime(now, tz);
+    const startLocal = startOfDay(nowInTz);
+    const endLocal = endOfDay(nowInTz);
+
+    const dayStartUtc = fromZonedTime(startLocal, tz);
+    const dayEndUtc = fromZonedTime(endLocal, tz);
+
+    const todayBookingsConfirmed = await db.booking.findMany({
         where: {
             commerceId: commerce.id,
-            status: "PENDING",
+            status: "CONFIRMED",
+            date: {
+                gte: dayStartUtc,
+                lte: dayEndUtc,
+            },
         },
         include: {
             service: {
@@ -92,8 +105,8 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                     </Link>
                 </Button>
 
-                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-xl font-semibold">
-                    Pendentes
+                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-lg font-semibold uppercase">
+                    Agendamentos de hoje
                 </h2>
 
                 <Sheet>
@@ -112,17 +125,17 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
 
             <div className="grid mt-14 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mb-20">
 
-                {pendingBookings.length > 0 ? (
-                    pendingBookings.map((booking) => (
+                {todayBookingsConfirmed.length > 0 ? (
+                    todayBookingsConfirmed.map((booking) => (
                         <div key={booking.id} className="animate-fade-in-down">
                             <Card
                                 className="m-4 p-4 bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)]"
                             >
                                 <CardHeader className="flex border-b border-solid border-zinc-700">
-                                    <CalendarClockIcon />
+                                    <CalendarCheckIcon />
                                     <CardTitle className="text-[var(--text-on-primary)] text-lg font-semibold mb-4">
-                                        
-                                        <Badge className="ml-2 bg-yellow-600">Pendente</Badge>
+
+                                        <Badge className="ml-2 bg-green-600">Confirmado</Badge>
                                     </CardTitle>
                                 </CardHeader>
 
@@ -163,10 +176,9 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                                             </div>
                                         </div>
 
-                                        <div className="flex justify-between items-center border-t space-x-5 border-zinc-700 p-3 mt-5">
-                                            <ConfirmButton bookingId={booking.id} />
+                                        <div className="flex w-full items-center border-t space-x-5 border-zinc-700 p-3 mt-5">
 
-                                            <CancelButton bookingId={booking.id} />
+
                                         </div>
 
                                     </div>
@@ -177,12 +189,11 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                 ) : (
                     <div className="flex justify-center">
                         <p className="m-4 text-[var(--text-on-background)] uppercase font-semibold text-sm text-zinc-400">
-                            Nenhum agendamento pendente.
+                            Nenhum agendamento para hoje.
                         </p>
                     </div>
 
                 )}
-
             </div>
 
             <div className="mt-auto">
@@ -190,6 +201,6 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
             </div>
 
         </div>
-
     );
 }
+
