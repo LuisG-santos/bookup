@@ -35,6 +35,17 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
   const session = await getServerSession(authOptions);
   const userName = session?.user?.name ?? "Visitante";
   const userId = session?.user?.id;
+
+  const membership = await db.commerceMembership.findFirst({
+        where: {
+            userId,
+            commerceId: commerceId,
+            role: "OWNER",
+        },
+    });
+
+    const isOwner = membership?.role === "OWNER";
+  
   let nextBookingDTO: {
     id: string;
     date: string;
@@ -148,7 +159,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
 
   return (
     <div className="bg-[var(--background)] text-[var(--text-on-background)] min-h-screen">
-      <Header subdomain={basePath} commerceName={commerceName}/>
+      <Header subdomain={basePath} commerceName={commerceName} isOwner={isOwner} />
 
       <div className="p-5">
         <h2 className="text-xl font-bold ">Olá, {userName} !</h2>

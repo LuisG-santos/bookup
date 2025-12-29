@@ -8,10 +8,11 @@ import { db } from "@/app/_lib/prisma";
 type HeaderProps = {
     subdomain: string;
     commerceName: string;
+    isOwner: boolean;
 };
 
 
-export default async function Header({ subdomain, commerceName }: HeaderProps) {
+export default async function Header({ subdomain, commerceName, isOwner }: HeaderProps) {
 
     const commerceLogo = await db.commerce.findUnique({
         where: { subdomain },
@@ -41,26 +42,18 @@ export default async function Header({ subdomain, commerceName }: HeaderProps) {
                         className="h-12 w-auto object-contain hidden md:block"
                         
                     />
-
-
-
                 </div>
                 
-
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button size="icon" variant="outline">
                             <MenuIcon />
                         </Button>
                     </SheetTrigger>
-                   <SidebarSheet commerceName={commerceName} />
+                   <SidebarSheet commerceName={commerceName} isOwner={isOwner} />
                 </Sheet>
 
-
-
             </CardContent>
-
-
         </Card>
 
 

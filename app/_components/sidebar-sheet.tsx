@@ -11,7 +11,7 @@ import {
 
 
 import Link from "next/link";
-import { CalendarIcon, HomeIcon, ChevronRightIcon } from "lucide-react";
+import { CalendarIcon, HomeIcon, ChevronRightIcon, CrownIcon, Sheet } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -23,9 +23,10 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 type SidebarSheetProps = {
     commerceName: string;
+    isOwner: boolean;
 };
 
-const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
+export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProps) {
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
 
@@ -34,6 +35,7 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
     const handleLogout = () => signOut();
+    // Placeholder for membership check
 
     return (
 
@@ -85,6 +87,14 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                     </Button>
                 </SheetClose>
 
+                {isOwner && isAuthenticated && (
+                    <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
+                        <Link href={`${base}/OwnerPages`}>
+                            <CrownIcon size={18} className="mr-2" />Painel do proprietário
+                        </Link>
+                    </Button>
+                )}
+
                 {isAuthenticated && (
 
                     <Button variant="ghost" className="justify-start gap-1 hover:bg-zinc-400" asChild>
@@ -93,75 +103,17 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
                         </Link>
                     </Button>
                 )}
-
-
-
-                {isAuthenticated && (
-
-                    <Accordion type="single" collapsible>
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger className="hover:no-underline hover:bg-zinc-800">
-                                <p className="flex ml-3 gap-3"><Image src="/avatar.svg" alt="Perfil Icon" width={20} height={20} className=" h-5 w-5 " />Perfil</p>
-
-
-                            </AccordionTrigger>
-                            <AccordionContent className="flex flex-col">
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button variant="ghost" className="justify-start gap-2">
-                                            <ChevronRightIcon className="h-4 w-4" />
-                                            Ver perfil
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[425px]">
-                                        <DialogHeader>
-                                            <DialogTitle className="text-white">Editar perfil</DialogTitle>
-                                            <DialogDescription>
-                                                Faça alterações no seu perfil aqui. Clique em salvar quando terminar.
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        <div className="grid gap-4">
-                                            <div className="relative flex flex-col items-center">
-                                                <Avatar className="h-24 w-24 rounded-full ">
-                                                    <AvatarImage
-                                                        className="rounded-full object-cover"
-                                                        src={data?.user?.image ?? ""}
-                                                        alt="User Avatar"
-                                                    />
-                                                </Avatar>
-                                                <p className="font-semibold text-white">{data?.user?.name}</p>
-                                                <p className="text-xs text-muted-foreground">{data?.user?.email}</p>
-
-                                            </div>
-                                            <div className="grid gap-3">
-                                                <Label htmlFor="username-1" className="text-white">Username</Label>
-                                                <Input id="username-1" name="username" className="text-white" defaultValue={data?.user?.name ?? ""} />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <DialogClose asChild>
-                                                <Button variant="outline" className="text-white">Cancel</Button>
-                                            </DialogClose>
-                                            <Button type="submit">Save changes</Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-
-                                <Button variant="ghost" className="justify-start" onClick={handleLogout}>
-                                    <ChevronRightIcon /> Sair da conta
-
-                                </Button>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                )}
             </div>
 
+             {isAuthenticated && (
+                    <SheetFooter>
+                        <Button variant="ghost" className="justify-start" onClick={handleLogout}>
+                            <ChevronRightIcon /> Sair da conta
+                        </Button>
+                    </SheetFooter>
+                )}
+
             {!isAuthenticated ? (
-
-
-
-
                 <SheetFooter>
 
                     <SheetClose asChild>
@@ -177,5 +129,3 @@ const SidebarSheet = ({ commerceName }: SidebarSheetProps) => {
         </SheetContent>
     );
 }
-
-export default SidebarSheet;

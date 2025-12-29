@@ -31,7 +31,7 @@ const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
                     <p className="text-[var(--text-on-primary)] text-lg font-semibold">{nextBooking.user.name}</p>
 
 
-                    <div className="flex justify-between mt-2 pt-2">
+                    <div className="flex justify-between mt-2 pt-2 lg:flex-col lg:gap-1">
                         <p className="text-[var(--text-on-primary)] text-sm">{nextBooking.service.name} • {nextBooking.service.duration} min</p>
 
                         <p className="text-[var(--text-on-primary)] text-sm">Hoje às {new Date(nextBooking.date).toLocaleTimeString("pt-BR",
@@ -43,7 +43,7 @@ const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
                     </div>
 
 
-                    <div className="flex justify-between items-center border-t space-x-5 border-zinc-700 p-3 mt-5">
+                    <div className="flex justify-between items-center border-t space-x-5 border-zinc-700 p-3 mt-5 lg:justify-start">
                         <FinalizeButton bookingId={nextBooking.id} />
 
                         <CancelButton bookingId={nextBooking.id} className="w-32" />
