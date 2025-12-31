@@ -54,7 +54,7 @@ const SchedulePage = async ({ params }: PageProps) => {
             <MenuIcon />
           </Button>
         </SheetTrigger>
-        <SidebarSheet commerceName={service.name} />
+        <SidebarSheet commerceName={service.name} isOwner={false} />
       </Sheet>
 
       {/* wrapper de conteúdo centralizado */}

@@ -10,7 +10,7 @@ type HeaderProps = {
 };
 
 
-export default async function HeaderOwner({ subdomain }: HeaderProps) {
+export default async function HeaderOwner({ subdomain}: HeaderProps) {
 
     const commerceLogo = await db.commerce.findUnique({
         where: { subdomain },

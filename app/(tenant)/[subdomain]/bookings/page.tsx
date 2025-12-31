@@ -1,6 +1,6 @@
 import { db } from "@/app/_lib/prisma";
 import FooterPage from "@/app/_components/ui/Footer";
-import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
+import { Card, CardContent } from "@/app/_components/ui/card";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
@@ -123,7 +123,7 @@ export default async function BookingsPage({ params }: PageProps) {
                             <MenuIcon />
                         </Button>
                     </SheetTrigger>
-                    <SidebarSheet commerceName={commerce.name} />
+                    <SidebarSheet commerceName={commerce.name} isOwner={false}/>
                 </Sheet>
             </div>
 

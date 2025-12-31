@@ -11,10 +11,10 @@ import {
 
 
 import Link from "next/link";
-import { HomeIcon, LogOutIcon,CalendarClockIcon, ClipboardCheckIcon} from "lucide-react";
+import { HomeIcon, CalendarClockIcon, ClipboardCheckIcon} from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import {useSession } from "next-auth/react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import LogOutButton from "./ui/logOutButton";
 ;
@@ -27,9 +27,6 @@ export default function SidebarOwner() {
     const loginPage = subdomain ? `/${subdomain}/login` : '/login';
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
-    const handleLogout = () =>{
-       signOut({callbackUrl: loginPage}); 
-    } 
 
     return (
 
@@ -82,9 +79,6 @@ export default function SidebarOwner() {
                     </Link>
                 </Button>
 
-
-
-                
             </div>
             {isAuthenticated && (
                     <SheetFooter>

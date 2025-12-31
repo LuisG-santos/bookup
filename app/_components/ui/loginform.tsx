@@ -1,8 +1,5 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./card";
-import { Label } from "./label";
-import { Input } from "./input";
 import { Button } from "./button";
 import Image from "next/image";
 import { signIn } from "next-auth/react";

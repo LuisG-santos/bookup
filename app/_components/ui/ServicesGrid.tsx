@@ -25,9 +25,6 @@ interface ServicesGridProps {
 const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const rawDuration = services.duration as number | null | undefined;
-    const durationInMinutes =
-        typeof rawDuration === "number" ? rawDuration : Number(rawDuration ?? NaN);
     const handleVerifyUser = () => {
 
         if (!session?.user?.id) {
@@ -43,10 +40,6 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
             <CardContent className="flex h-full flex- p-0 px-2 pt-2 pb-1 gap-3">
                 <div className="relative h-[150px] w-[150px] min-h-[150px] min-w-[150px] max-h-[150px] max-w-[150px]">
                     <Image fill className="object-cover rounded-2xl" src={services.imageURL} alt={services.name} />
-                    <Badge className="absolute left-2 top-2 space-x-1 bg-orange-600" variant="secondary">
-                        <FlameIcon className="h-4 w-4" />
-                        <p>Popular</p>
-                    </Badge>
                 </div>
 
                 <div className="flex flex-1 flex-col py-3">

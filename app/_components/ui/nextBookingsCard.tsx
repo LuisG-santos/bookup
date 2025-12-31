@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "./card";
-import { Button } from "./button";
-import {NotebookPenIcon, X, XIcon } from "lucide-react";
+import {NotebookPenIcon } from "lucide-react";
 import { CancelButton } from "./CancelButton";
 import { FinalizeButton } from "./FinalizeButton";
 
@@ -14,7 +13,6 @@ type NextBooking = {
 type NextBookingsCardProps = {
     nextBooking: NextBooking | null;
 };
-
 
 const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
     return (

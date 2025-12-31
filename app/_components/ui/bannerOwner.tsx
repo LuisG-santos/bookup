@@ -1,7 +1,6 @@
 import Image from "next/image"
-import { comma } from "postcss/lib/list"
-import { Card, CardContent, CardFooter, CardHeader } from "./card"
-import { CalendarCheck, FileWarningIcon, TriangleAlertIcon } from "lucide-react"
+import { Card, CardContent, CardFooter} from "./card"
+import { CalendarCheck} from "lucide-react"
 
 type BannerProps = {
     imageUrl?: string

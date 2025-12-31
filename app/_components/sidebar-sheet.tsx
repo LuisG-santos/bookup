@@ -14,13 +14,9 @@ import Link from "next/link";
 import { CalendarIcon, HomeIcon, ChevronRightIcon, CrownIcon, Sheet } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
-import Image from "next/image";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import LogOutButton from "./ui/logOutButton";
 type SidebarSheetProps = {
     commerceName: string;
     isOwner: boolean;
@@ -34,9 +30,7 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
     const loginPage = subdomain ? `/${subdomain}/login` : '/login';
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
-    const handleLogout = () => signOut();
-    // Placeholder for membership check
-
+    
     return (
 
         <SheetContent>
@@ -107,9 +101,7 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
 
              {isAuthenticated && (
                     <SheetFooter>
-                        <Button variant="ghost" className="justify-start" onClick={handleLogout}>
-                            <ChevronRightIcon /> Sair da conta
-                        </Button>
+                        <LogOutButton className="w-full" />
                     </SheetFooter>
                 )}
 

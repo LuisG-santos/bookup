@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
+import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-  },
+  turbopack: {},
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -13,16 +13,22 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      { 
-      protocol: "https",
-      hostname: "belivio.b-cdn.net",
-      pathname: "/**"
-    },
-    {
-      hostname: "lh3.googleusercontent.com",
-    }
-  ],
+      {
+        protocol: "https",
+        hostname: "belivio.b-cdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+    ],
   },
+  reactStrictMode: true,
 };
 
-export default nextConfig;
+export default withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+})(nextConfig);
