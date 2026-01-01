@@ -167,7 +167,7 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
             router.push(basePath);
             router.refresh();
-            
+
         } catch (error) {
             console.error(error);
             toast.error("Erro ao criar agendamento. Tente novamente.");
@@ -176,96 +176,100 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
 
     return (
-        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg--background text-[var(--text-on-background)]">
-            <div className="w-full px-4 max-w-md">
-                <Calendar
-                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
-                mode="single"
-                locale={ptBR}
-                disabled={{ before: new Date() }}
-                selected={selectedDay}
-                onSelect={handleDateSelect}
-            />
+        <div className="min-h-[100dvh] w-full flex flex-col items-center py-6 space-y-5 bg-background text-foreground">
+            {/* CALENDÁRIO */}
+            <div className="w-full max-w-md px-4">
+                <div className="rounded-3xl border border-border bg-primary text-card-foreground overflow-hidden shadow-xl">
+                    <div className="p-4 bg-primary">
+                        <Calendar
+                            className="w-full bg-primary"
+                            mode="single"
+                            locale={ptBR}
+                            disabled={{ before: new Date() }}
+                            selected={selectedDay}
+                            onSelect={handleDateSelect}
+                        />
+                    </div>
+                </div>
             </div>
-            
 
+            {/* HORÁRIOS */}
             {selectedDay && (
-                <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
-                    <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">
-                        Selecione o horário
-                    </h2>
+                <div className="w-full max-w-md px-4 ">
+                    <div className="rounded-3xl bg-primary text-card-foreground shadow-xl border border-border p-4">
+                        <h2 className="font-semibold text-lg pb-2 border-b border-border">
+                            Selecione o horário
+                        </h2>
 
-                    {loadingDay && (
-                        <p className="text-sm text-gray-300 mt-3">Carregando horários…</p>
-                    )}
+                        {loadingDay && (
+                            <p className="text-sm text-muted-foreground mt-3">Carregando horários…</p>
+                        )}
 
-                    {!loadingDay && slots.length === 0 && (
-                        <p className="text-sm text-gray-400 mt-3">
-                            Nenhum horário disponível para este dia.
-                        </p>
-                    )}
+                        {!loadingDay && slots.length === 0 && (
+                            <p className="text-sm text-muted-foreground mt-3">
+                                Nenhum horário disponível para este dia.
+                            </p>
+                        )}
 
-                    <div className="grid grid-cols-4 gap-3 mt-3">
-                        {slots.map((slot) => (
-                            <Button
-                                key={slot.startMinutes}
-                                onClick={() => handleTimeSelect(slot.startTimeLabel)}
-                                className={`m-1 h-12 transition-all active:scale-95 text-lg hover:bg-zinc-400 font-sans ${selectedTime === slot.startTimeLabel
-                                    ? "bg-zinc-400 text-[var(--text-on-background)] border-2 border-[var(--text-on-background)]"
-                                    : ""
-                                    }`}
-                            >
-                                {slot.startTimeLabel}
-                            </Button>
-                        ))}
+                        <div className="grid grid-cols-4 gap-3 mt-3">
+                            {slots.map((slot) => (
+                                <Button
+                                    variant="default"
+                                    key={slot.startMinutes}
+                                    onClick={() => handleTimeSelect(slot.startTimeLabel)}
+                                    className={`h-12 text-base transition-all active:scale-95 ${selectedTime === slot.startTimeLabel
+                                        ? " text-foreground border border-zinc-400"
+                                        : " text-secondary-foreground hover:bg-muted"
+                                        }`}
+                                >
+                                    {slot.startTimeLabel}
+                                </Button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className="flex justify-center p-4 w-full  bg-background mt-4">
-                <Card className=" bg-primary w-full border-2 border-secondary rounded-3xl shadow-xl">
-                    <CardHeader className=" border-b border-[var(--text-on-primary)] justify-center">
-                        <CardTitle className="pb-2 font-bold text-lg text-[var(--text-on-primary)]">
-                            Seu agendamento
-                        </CardTitle>
+            {/* RESUMO */}
+            <div className="w-full max-w-md px-4">
+                <Card className="bg-primary text-card-foreground border border-border rounded-3xl shadow-xl">
+                    <CardHeader className="border-b border-border justify-center">
+                        <CardTitle className="text-lg font-bold">Seu agendamento</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-col gap-y-1">
+
+                    <CardContent className="flex flex-col gap-y-2 pt-4">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-gray-400 text-lg">Serviço:</h2>
-                            <p className="text-sm text-[var(--text-on-primary)]">{service?.name}</p>
+                            <span className="text-muted-foreground">Serviço:</span>
+                            <span>{service?.name}</span>
                         </div>
 
-                        <div className="flex items-center justify-between ">
-                            <h2 className="text-gray-400 text-lg">Dia:</h2>
-                            <p className="text-sm text-[var(--text-on-primary)]">
-                                {selectedDay
-                                    ? format(selectedDay, "d 'de' MMMM", { locale: ptBR })
-                                    : ""}
-                            </p>
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Dia:</span>
+                            <span>
+                                {selectedDay ? format(selectedDay, "d 'de' MMMM", { locale: ptBR }) : ""}
+                            </span>
                         </div>
 
-                        <div className="flex items-center justify-between ">
-                            <h2 className="text-gray-400 text-lg">Hora:</h2>
-                            <p className="text-sm text-[var(--text-on-background)]">{selectedTime}</p>
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Hora:</span>
+                            <span>{selectedTime ?? "-"}</span>
                         </div>
 
-                        <div className="flex items-center  justify-between">
-                            <h2 className="text-gray-400 text-lg">Valor:</h2>
-                            <p className="text-sm text-[var(--text-on-background)]">
-                                {Intl.NumberFormat("pt-BR", {
-                                    style: "currency",
-                                    currency: "BRL",
-                                }).format(Number(service.price))}
-                            </p>
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Valor:</span>
+                            <span>
+                                {Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+                                    Number(service.price)
+                                )}
+                            </span>
                         </div>
 
-                        <div className=" pt-3 border-t border-[var(--text-on-primary)] flex justify-center">
+                        <div className="pt-3 border-t border-border">
                             <Button
-                                variant="outline"
                                 type="button"
                                 onClick={handleCreateBooking}
                                 disabled={!selectedDay || !selectedTime || !service}
-                                className="bg-[var(--secondary)] h-12 w-full hover:bg-zinc-800 font-bold"
+                                className="h-12 w-full"
                             >
                                 Confirmar Agendamento
                             </Button>
