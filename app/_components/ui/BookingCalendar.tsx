@@ -187,11 +187,11 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
             />
 
             {/* CALENDÁRIO */}
-            <div className="w-full max-w-md px-4">
-                <div className=" overflow-hidden shadow-xl">
+            <div className="w-full max-w-lg px-4">
+                <div className="shadow-xl">
                     <div className="p-4">
                         <Calendar
-                            className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
+                            className="w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
                             mode="single"
                             locale={ptBR}
                             disabled={{ before: new Date() }}
