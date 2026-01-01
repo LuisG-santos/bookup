@@ -93,19 +93,6 @@ if (isSameDay(date, now)) {
     },
   });
 
-  console.log("BOOKINGS DO DIA", {
-    commerceId,
-    dayStart: dayStart.toISOString(),
-    dayEnd: dayEnd.toISOString(),
-    count: bookings.length,
-    bookings: bookings.map((b) => ({
-      id: b.id,
-      date: b.date.toISOString(),
-      status: b.status,
-      serviceId: b.serviceId,
-    })),
-  });
-
   const dateToMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
 
   const formatMinutes = (total: number) => {
@@ -159,11 +146,5 @@ if (isSameDay(date, now)) {
 
     current += slotIntervalMinutes;
   }
-
-  console.log("SLOTS GERADOS", {
-    count: slots.length,
-    slots: slots.map((s) => s.startTimeLabel),
-  });
-
   return slots;
 }

@@ -79,7 +79,6 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
             }
 
             const data = await availabilityRes.json();
-            console.log("Slots recebidos da API:", data);
             setSlots(data.slots ?? []);
         } catch (error) {
             console.error("Erro ao buscar slots:", error);
@@ -96,13 +95,11 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
     const handleCreateBooking = async () => {
         if (!selectedDay || !selectedTime) {
-            console.log("Data ou hora não selecionada", { selectedDay, selectedTime });
             return;
         }
 
         const userId = session?.user?.id;
         if (!userId) {
-            console.log("Sem userId na sessão");
             toast.error("Você precisa estar logado para criar um agendamento.");
             return;
         }

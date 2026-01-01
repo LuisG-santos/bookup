@@ -72,11 +72,13 @@
 
   html {
     @apply h-full;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply h-full;
     background-color: var(--background);
     color: var(--text-on-background);
+    -webkit-text-size-adjust: 100%;
   }
 }

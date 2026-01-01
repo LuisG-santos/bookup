@@ -31,7 +31,7 @@ const SchedulePage = async ({ params }: PageProps) => {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-[var(--background)] text-[var(--text-on-background)] overflow-x-hidden">
+    <div className="relative min-h-dvh w-full bg-[var(--background)] text-[var(--text-on-background)] overflow-x-hidden">
       {/* botões fixos */}
       <Button
         size="icon"
@@ -58,7 +58,7 @@ const SchedulePage = async ({ params }: PageProps) => {
       </Sheet>
 
       {/* wrapper de conteúdo centralizado */}
-      <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col p-5 pt-16 space-y-4">
+      <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col p-5 pt-16 space-y-4">
         <h1 className="text-4xl">{service.name}</h1>
 
         <p className="border-b border-[var(--text-on-primary)] pb-5 text-sm text-zinc-400">
