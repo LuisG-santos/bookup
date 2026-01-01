@@ -1,8 +1,9 @@
 import AuthProvider from "@/app/_providers/auth";
 import { db } from "@/app/_lib/prisma";
 import type { ReactNode, CSSProperties } from "react";
-import { getTextColorsForBackground } from "@/app/utils/color";
+import { getTextColorsForBackground, hexToHslTriplet } from "@/app/utils/color";
 import { Toaster } from "react-hot-toast";
+import { root } from "postcss";
 
 type TenantLayoutProps = {
   children: ReactNode;
@@ -24,31 +25,45 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
   const textColorsPrimary = getTextColorsForBackground(commerce.primaryColor);
   const textColorsSecondary = getTextColorsForBackground(commerce.secondaryColor);
 
+
+
   const themeVariables: CSSProperties & { [key: string]: string } = {
     // vars de cor usadas pelo shadcn (bg-background, bg-primary, bg-secondary, etc.)
-    ["--background"]: commerce.backgroundColor,
-    ["--primary"]: commerce.primaryColor,
-    ["--secondary"]: commerce.secondaryColor,
+    ["--background"]: hexToHslTriplet(commerce.backgroundColor),
+    ["--primary"]: hexToHslTriplet(commerce.primaryColor),
+    ["--secondary"]: hexToHslTriplet(commerce.secondaryColor),
 
-    ["--foreground"]: textColorsBackground.primary,
-    ["--primary-foreground"]: textColorsPrimary.primary,
-    ["--secondary-foreground"]: textColorsSecondary.primary,
+    ["--foreground"]: hexToHslTriplet(textColorsBackground.primary),
+    ["--primary-foreground"]: hexToHslTriplet(textColorsPrimary.primary),
+    ["--secondary-foreground"]: hexToHslTriplet(textColorsSecondary.primary),
 
     // compat com suas vars antigas, se ainda usar em algum lugar
     ["--text-on-background"]: textColorsBackground.primary,
     ["--text-on-primary"]: textColorsPrimary.primary,
     ["--text-on-secondary"]: textColorsSecondary.primary,
   };
+  const rootCss = `
+  :root{
+    --background: ${themeVariables["--background"]};
+    --foreground: ${themeVariables["--foreground"]};
+    --primary: ${themeVariables["--primary"]};
+    --primary-foreground: ${themeVariables["--primary-foreground"]};
+    --secondary: ${themeVariables["--secondary"]};
+    --secondary-foreground: ${themeVariables["--secondary-foreground"]};
 
+  }`;
   return (
-    <div
-      style={themeVariables}
-      className="min-h-screen bg-[var(--background)] text-[var(--foreground)]"
-    >
-      <AuthProvider>
-        <Toaster position="top-center" />
-        {children}
-      </AuthProvider>
-    </div>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: rootCss }} />
+      <div
+        style={themeVariables}
+        className="min-h-screen bg--background text-foreground"
+      >
+        <AuthProvider>
+          <Toaster position="top-center" />
+          {children}
+        </AuthProvider>
+      </div>
+    </>
   );
 }

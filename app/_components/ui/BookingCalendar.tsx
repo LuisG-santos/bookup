@@ -176,9 +176,9 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
 
     return (
-        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg-[var(--background)] text-[var(--text-on-background)]">
+        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg--background text-[var(--text-on-background)]">
             <Calendar
-                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-[var(--primary)] text-[var(--text-on-background)] "
+                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
                 mode="single"
                 locale={ptBR}
                 disabled={{ before: new Date() }}
@@ -187,7 +187,7 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
             />
 
             {selectedDay && (
-                <div className="pt-8 p-4 bg-[var(--primary)] rounded-3xl w-full">
+                <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
                     <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">
                         Selecione o horário
                     </h2>
@@ -219,8 +219,8 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                 </div>
             )}
 
-            <div className="flex justify-center p-4 w-full  bg-[var(--background)] mt-4">
-                <Card className=" bg-[var(--primary)] w-full border-2 border-[var(--secondary)] rounded-3xl shadow-xl">
+            <div className="flex justify-center p-4 w-full  bg-background mt-4">
+                <Card className=" bg-primary w-full border-2 border-secondary rounded-3xl shadow-xl">
                     <CardHeader className=" border-b border-[var(--text-on-primary)] justify-center">
                         <CardTitle className="pb-2 font-bold text-lg text-[var(--text-on-primary)]">
                             Seu agendamento
