@@ -8,8 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./card"
 import { format, set } from "date-fns"
 import { toast } from "react-hot-toast";
 import { useRouter, useParams } from "next/navigation";
-import { getBookings } from "@/app/_actions/getBookings"
-
+import { getBookings } from "@/app/_actions/getBookings";
 
 type BookingCalendarProps = {
     service: {
@@ -21,7 +20,7 @@ type BookingCalendarProps = {
     };
 }
 
-export function BookingCalendar({ service }: BookingCalendarProps) {
+export function BookingCalendar({ service, }: BookingCalendarProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const params = useParams<{ subdomain: string }>();
@@ -186,24 +185,6 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                 onSelect={handleDateSelect}
             />
 
-            {/* CALENDÁRIO */}
-            <div className="w-full max-w-lg px-4">
-                <div className="shadow-xl">
-                    <div className="p-4">
-                        <Calendar
-                            className="w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
-                            mode="single"
-                            locale={ptBR}
-                            disabled={{ before: new Date() }}
-                            selected={selectedDay}
-                            onSelect={handleDateSelect}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* SEÇÃO DE HORÁRIOS */}
-
             {selectedDay && (
                 <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
                     <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">
@@ -237,7 +218,7 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                 </div>
             )}
 
-            <div className="flex justify-center p-4 w-full  bg-background mt-4">
+            <div className="flex justify-center p-4 w-full mt-4">
                 <Card className=" bg-primary w-full border-2 border-secondary rounded-3xl shadow-xl">
                     <CardHeader className=" border-b border-[var(--text-on-primary)] justify-center">
                         <CardTitle className="pb-2 font-bold text-lg text-[var(--text-on-primary)]">
