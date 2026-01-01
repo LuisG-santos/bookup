@@ -177,7 +177,8 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
 
     return (
         <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg--background text-[var(--text-on-background)]">
-            <Calendar
+            <div className="w-full px-4 max-w-md">
+                <Calendar
                 className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
                 mode="single"
                 locale={ptBR}
@@ -185,6 +186,8 @@ export function BookingCalendar({ service }: BookingCalendarProps) {
                 selected={selectedDay}
                 onSelect={handleDateSelect}
             />
+            </div>
+            
 
             {selectedDay && (
                 <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
