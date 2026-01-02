@@ -56,6 +56,9 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
 
             const dateParam = date.toISOString();
 
+            console.log("local", new Date().toString());
+            console.log("Iso", new Date().toISOString());
+
             const [bookings, availabilityRes] = await Promise.all([
                 getBookings({ date, serviceId: service.id }),
                 fetch(

@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "./card";
 import {NotebookPenIcon } from "lucide-react";
 import { CancelButton } from "./CancelButton";
 import { FinalizeButton } from "./FinalizeButton";
+import { formatBookingTime } from "@/app/utils/date";
 
 type NextBooking = {
     id: string;
@@ -32,12 +33,7 @@ const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
                     <div className="flex justify-between mt-2 pt-2 lg:flex-col lg:gap-1">
                         <p className="text-[var(--text-on-primary)] text-sm">{nextBooking.service.name} • {nextBooking.service.duration} min</p>
 
-                        <p className="text-[var(--text-on-primary)] text-sm">Hoje às {new Date(nextBooking.date).toLocaleTimeString("pt-BR",
-                            {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            }
-                        )}</p>
+                        <p className="text-[var(--text-on-primary)] text-sm">Hoje às {formatBookingTime(nextBooking.date)}</p>
                     </div>
 
                     <div className="flex justify-between items-center border-t space-x-5 border-zinc-700 p-3 mt-5 lg:justify-start">
