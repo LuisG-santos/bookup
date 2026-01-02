@@ -12,9 +12,6 @@ import { Tag } from "lucide-react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { Calendar } from "./calendar";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { MuiCalendar } from "./calendarMUI";
 
 type HomeContentProps = {
   commerceId: string;
