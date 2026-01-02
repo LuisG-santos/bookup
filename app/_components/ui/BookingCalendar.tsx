@@ -1,5 +1,4 @@
 "use client"
-import { Calendar } from "@/app/_components/ui/calendar"
 import { ptBR } from "date-fns/locale"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
