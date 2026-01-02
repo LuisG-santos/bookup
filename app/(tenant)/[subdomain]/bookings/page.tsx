@@ -14,6 +14,7 @@ import { CancelButton } from "@/app/_components/ui/CancelButton";
 import { startOfDay } from "date-fns";
 import { Avatar, AvatarImage } from "@/app/_components/ui/avatar";
 import { expirePendingBookings } from "@/app/_lib/expirePendingBookings";
+import { formatBookingDay, formatBookingMonth, formatBookingTime } from "@/app/utils/date";
 
 type PageProps = {
     params: Promise<{ subdomain: string }>;
@@ -156,20 +157,13 @@ export default async function BookingsPage({ params }: PageProps) {
 
                                     <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid border-zinc-400">
                                         <p className="text-sm text-[var(--text-on-primary)] font-semibold">
-                                            {(() => {
-                                                const month = booking.date.toLocaleDateString("pt-BR", { month: "long" });
-                                                return month.charAt(0).toUpperCase() + month.slice(1);
-                                            })()}
+                                           {formatBookingMonth(booking.date)}
                                         </p>
 
-                                        <p className="text-xl text-[var(--text-on-primary)] font-bold">{booking.date.toLocaleDateString("pt-BR", {
-                                            day: "2-digit",
-                                        })}</p>
+                                        <p className="text-xl text-[var(--text-on-primary)] font-bold">{formatBookingDay(booking.date)}</p>
 
-                                        <p className="text-sm text-[var(--text-on-primary)]">{new Date(booking.date).toLocaleTimeString("pt-BR", {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        })}</p>
+                                        <p className="text-sm text-[var(--text-on-primary)]">{formatBookingTime(booking.date)}</p>
+
                                         <div className="mt-2 pl-1 self-end">
                                             {(booking.status === "PENDING") && (
                                                 <CancelButton bookingId={booking.id} />

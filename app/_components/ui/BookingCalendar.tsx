@@ -77,7 +77,7 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                 );
                 throw new Error("Erro ao carregar horários");
             }
-
+            
             const data = await availabilityRes.json();
             setSlots(data.slots ?? []);
         } catch (error) {
@@ -147,7 +147,6 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                 if (message.includes("horário já está ocupado") && selectedDay) {
                     await handleDateSelect(selectedDay);
                 }
-
                 return;
             }
 
@@ -173,7 +172,6 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
             toast.error("Erro ao criar agendamento. Tente novamente.");
         }
     };
-
 
     return (
         <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg-background text-[var(--text-on-background)]">

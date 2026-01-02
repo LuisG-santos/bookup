@@ -3,8 +3,7 @@ import { CardContent } from "./card";
 import { Badge } from "./badge";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { BookingStatus } from "@prisma/client";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { formatBookingDay, formatBookingMonth, formatBookingTime } from "@/app/utils/date";
 
 type NextBookingDTO = {
   id: string;
@@ -50,11 +49,6 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
     );
   }
 
-  const bookingDate = new Date(booking.date);
-  const month = format(bookingDate, "MMMM", { locale: ptBR });
-  const day = format(bookingDate, "dd", { locale: ptBR });
-  const time = format(bookingDate, "HH:mm", { locale: ptBR });
-
   return (
     <>
       <h2 className="mt-6 mb-3 text-xs font-bold uppercase text-gray-400">Próximos Agendamentos</h2>
@@ -78,9 +72,9 @@ export default function BookingItem ({ booking, user }: BookingItemProps){
       
           {/*Div direita */}
           <div className="flex flex-col items-center justify-center px-5 border-l-2 border-solid border-zinc-400">
-            <p className="text-sm font-semibold text-[var(--text-on-primary)]">{month.charAt(0).toUpperCase() + month.slice(1)}</p>
-            <p className="text-xl font-bold text-[var(--text-on-primary)]">{day}</p>
-            <p className="text-sm text-[var(--text-on-primary)]">{time}</p>
+            <p className="text-sm font-semibold text-[var(--text-on-primary)]">{formatBookingMonth(booking.date)}</p>
+            <p className="text-xl font-bold text-[var(--text-on-primary)]">{formatBookingDay(booking.date)}</p>
+            <p className="text-sm text-[var(--text-on-primary)]">{formatBookingTime(booking.date)}</p>
             
           </div>
 

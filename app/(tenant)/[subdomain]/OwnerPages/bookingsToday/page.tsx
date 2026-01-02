@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/c
 import { endOfDay, startOfDay } from "date-fns";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { Badge } from "@/app/_components/ui/badge";
+import { formatBookingDay, formatBookingMonth, formatBookingTime } from "@/app/utils/date";
 
 type BookingTodayProps = {
     params: Promise<{ subdomain: string }>;
@@ -105,7 +106,7 @@ export default async function BookingToday({ params }: BookingTodayProps) {
                     </Link>
                 </Button>
 
-                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-lg font-semibold uppercase">
+                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-base font-semibold uppercase">
                     Agendamentos de hoje
                 </h2>
 
@@ -152,26 +153,15 @@ export default async function BookingToday({ params }: BookingTodayProps) {
                                             <div className="flex flex-col">
 
                                                 <p className="text-[var(--text-on-primary)] text-sm">
-                                                    {new Date(booking.date)
-                                                        .toLocaleDateString("pt-BR", { month: "long" })
-                                                        .replace(/^./, (c) => c.toUpperCase())}
+                                                    {formatBookingMonth(booking.date)}
                                                 </p>
 
                                                 <p className="text-xl font-semibold pl-4">
-                                                    {new Date(booking.date).toLocaleDateString("pt-BR",
-                                                        {
-                                                            day: "2-digit",
-                                                        }
-                                                    )}
+                                                    {formatBookingDay(booking.date)}
                                                 </p>
 
                                                 <p className="text-[var(--text-on-primary)] text-sm pl-3">
-                                                    {new Date(booking.date).toLocaleTimeString("pt-BR",
-                                                        {
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                        }
-                                                    )}
+                                                    {formatBookingTime(booking.date)}
                                                 </p>
                                             </div>
                                         </div>
