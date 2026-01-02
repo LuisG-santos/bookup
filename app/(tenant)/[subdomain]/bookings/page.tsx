@@ -143,14 +143,14 @@ export default async function BookingsPage({ params }: PageProps) {
                                 <CardContent className="flex justify-between p-0">
 
                                     <div className="flex flex-col gap-2 p-5 pl-5">
-                                        <Badge className={` text-sm font-semibold w-fit ${StatusColor(booking.status)} `}>{translateStatus(booking.status)}</Badge>
-                                        <h3 className=" font-semibold">{booking.service?.name}</h3>
+                                        <Badge className={`text-sm text-white font-semibold w-fit ${StatusColor(booking.status)} `}>{translateStatus(booking.status)}</Badge>
+                                        <h3 className=" font-semibold text-[var(--text-on-primary)]">{booking.service?.name}</h3>
 
                                         <div className="flex items-center gap-3">
                                             <Avatar className="w-6 h-6 rounded-full bg-gray-100">
                                                 <AvatarImage src={session?.user?.image || ""} alt="Avatar" />
                                             </Avatar>
-                                            <p className="text-sm">{session.user.name}</p>
+                                            <p className="text-sm text-[var(--text-on-primary)]">{session.user.name}</p>
                                         </div>
                                     </div>
 
@@ -203,7 +203,7 @@ export default async function BookingsPage({ params }: PageProps) {
                                         <CardContent className="flex justify-between p-0">
 
                                             <div className="flex flex-col gap-2 p-5 pl-5">
-                                                <Badge className={` text-sm font-semibold w-fit ${StatusColor(booking.status)} `}>{translateStatus(booking.status)}</Badge>
+                                                <Badge className={` text-sm font-semibold text-white w-fit ${StatusColor(booking.status)} `}>{translateStatus(booking.status)}</Badge>
                                                 <h3 className=" font-semibold">{booking.service?.name}</h3>
 
                                                 <div className="flex items-center gap-3">

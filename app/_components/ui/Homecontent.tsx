@@ -157,7 +157,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
   );
 
   return (
-    <div className="bg-[var(--background)] text-[var(--text-on-background)] min-h-screen">
+    <div className="bg-background text-[var(--text-on-background)] min-h-screen">
       <Header subdomain={basePath} commerceName={commerceName} isOwner={isOwner} />
 
       <div className="p-5">
@@ -169,7 +169,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
 
           {quicksearchOptions.map((option) => (
             <Button
-              className="gap-2 bg-[var(--primary)] text-[var(--text-on-primary)] snap-start hover:bg-zinc-700"
+              className="gap-2 bg-primary text-[var(--text-on-primary)] snap-start hover:bg-zinc-700"
               variant="secondary"
               key={option.label}
             >

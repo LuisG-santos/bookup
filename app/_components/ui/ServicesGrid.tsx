@@ -36,7 +36,7 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
     }
     return (
 
-        <Card className="min-w-[170px] p-0 rounded-2xl h-full bg-[var(--primary)] shadow-[0_3px_8px_rgba(0,0,0,.55)]">
+        <Card className="min-w-[170px] p-0 rounded-2xl h-full bg-primary shadow-[0_3px_8px_rgba(0,0,0,.55)]">
             <CardContent className="flex h-full flex- p-0 px-2 pt-2 pb-1 gap-3">
                 <div className="relative h-[150px] w-[150px] min-h-[150px] min-w-[150px] max-h-[150px] max-w-[150px]">
                     <Image fill className="object-cover rounded-2xl" src={services.imageURL} alt={services.name} />
@@ -60,7 +60,7 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
                         <Button
                             size="sm"
                             onClick={handleVerifyUser}
-                            className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-[var(--secondary)] hover:bg-zinc-700"
+                            className="w-full px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-secondary hover:bg-zinc-700"
                         >
                             Agendar
                         </Button>

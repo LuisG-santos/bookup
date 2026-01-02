@@ -75,8 +75,8 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
     });
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
-            <div className="fixed w-full bg-[var(--primary)] shadow-[0_20px_10px_rgba(0,0,0,.55)] h-14 flex items-center">
+        <div className="relative min-h-screen w-full flex flex-col bg-background text-[var(--text-on-background)]">
+            <div className="fixed w-full bg-primary shadow-[0_20px_10px_rgba(0,0,0,.55)] h-14 flex items-center">
                 <Button
                     size="icon"
                     variant="outline"
@@ -112,7 +112,7 @@ export default async function BookingConfirm({ params }: BookingPendingsProps) {
                     confirmBookings.map((booking) => (
                         <div key={booking.id} className="animate-fade-in-down">
                             <Card
-                                className="m-4 p-4 bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)]"
+                                className="m-4 p-4 bg-primary shadow-[0_20px_30px_rgba(0,0,0,.55)]"
                             >
                                 <CardHeader className="flex border-b border-solid border-zinc-700">
                                     <CalendarCheckIcon />

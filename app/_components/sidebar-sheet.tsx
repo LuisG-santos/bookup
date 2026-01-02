@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
     SheetClose,
     SheetContent,
@@ -9,9 +8,8 @@ import {
     SheetTitle,
 } from "./ui/sheet";
 
-
 import Link from "next/link";
-import { CalendarIcon, HomeIcon, ChevronRightIcon, CrownIcon, Sheet } from "lucide-react";
+import { CalendarIcon, HomeIcon, CrownIcon, Sheet } from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -33,7 +31,7 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
     
     return (
 
-        <SheetContent className="bg-primary">
+        <SheetContent>
             <SheetHeader>
                 <SheetTitle className=" font-semibold text-[var(--text-secondary)]">Menu</SheetTitle>
             </SheetHeader>
@@ -62,9 +60,6 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
                             Entre ou crie uma conta para gerenciar seus agendamentos.
                         </p>
                     </div>
-
-
-
                 )}
 
             </div>

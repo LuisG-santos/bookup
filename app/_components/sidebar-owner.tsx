@@ -30,9 +30,9 @@ export default function SidebarOwner() {
 
     return (
 
-        <SheetContent className="bg-primary">
+        <SheetContent>
             <SheetHeader>
-                <SheetTitle className=" font-semibold text-[var(--text-secondary)]">Menu</SheetTitle>
+                <SheetTitle className=" font-semibold text-[var(--text-primary)]">Menu</SheetTitle>
             </SheetHeader>
             <div className="p-5 gap-3 border-b flex items-center border-solid  border-zinc-700">
 
@@ -47,7 +47,7 @@ export default function SidebarOwner() {
 
                     </Avatar>
                     <div className="flex flex-col justify-center leading-tight  ">
-                        <p className="font-semibold">{data?.user?.name}</p>
+                        <p className="font-semibold text-[var(--text-on-primary)]">{data?.user?.name}</p>
                         <p className="text-xs text-muted-foreground">{data?.user?.email}</p>
                     </div>
 

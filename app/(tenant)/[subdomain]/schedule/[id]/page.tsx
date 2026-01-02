@@ -12,9 +12,8 @@ type PageProps = {
   params: Promise<{ subdomain: string; id: string }>
 }
 
-const SchedulePage = async ({ params }: PageProps) => {
+const SchedulePage = async ({ params}: PageProps) => {
   const { subdomain, id } = await params;
-
   const service = await db.services.findUnique({
     where: { id },
     select: {
@@ -30,8 +29,10 @@ const SchedulePage = async ({ params }: PageProps) => {
     return notFound();
   }
 
+  const isOwner = false;
+
   return (
-    <div className="relative min-h-dvh w-full bg-[var(--background)] text-[var(--text-on-background)] overflow-x-hidden">
+    <div className="relative min-h-dvh w-full bg-background text-[var(--text-on-background)] overflow-x-hidden">
       {/* botões fixos */}
       <Button
         size="icon"
@@ -54,7 +55,7 @@ const SchedulePage = async ({ params }: PageProps) => {
             <MenuIcon />
           </Button>
         </SheetTrigger>
-        <SidebarSheet commerceName={service.name} isOwner={false} />
+        <SidebarSheet commerceName={service.name} isOwner={isOwner}/>
       </Sheet>
 
       {/* wrapper de conteúdo centralizado */}

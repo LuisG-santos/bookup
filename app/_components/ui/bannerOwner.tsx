@@ -13,7 +13,7 @@ type BannerProps = {
 
 export function BannerOwner({imageUrl, bookingsPending, bookingsToday, commerceName }: BannerProps) {
     return (
-        <Card className="flex  bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)] m-4">
+        <Card className="flex  bg-primary shadow-[0_20px_30px_rgba(0,0,0,.55)] m-4">
 
             <CardContent className="flex flex-col justify-around">
                 <div className="p-5">

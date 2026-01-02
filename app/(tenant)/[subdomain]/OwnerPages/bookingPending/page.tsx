@@ -79,7 +79,7 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
     });
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col bg-background text-[var(--text-on-background)]">
+        <div className="relative min-h-screen w-full bg-background flex flex-col text-[var(--text-on-background)]">
             <div className="fixed w-full bg-primary shadow-[0_20px_10px_rgba(0,0,0,.55)] h-14 flex items-center">
                 <Button
                     size="icon"
@@ -92,7 +92,7 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                     </Link>
                 </Button>
 
-                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-xl font-semibold">
+                <h2 className="fixed top-5 left-1/2 -translate-x-1/2 text-xl text-[var(--text-on-primary)] font-semibold">
                     Pendentes
                 </h2>
 
@@ -110,11 +110,11 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                 </Sheet>
             </div>
 
-            <div className="grid mt-14 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mb-20">
+            <div className="grid bg-background mt-14 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mb-20">
 
                 {pendingBookings.length > 0 ? (
                     pendingBookings.map((booking) => (
-                        <div key={booking.id} className="animate-fade-in-down">
+                        <div key={booking.id} className="animate-fade-in-down bg-background">
                             <Card
                                 className="m-4 p-4 bg-primary shadow-[0_20px_30px_rgba(0,0,0,.55)]"
                             >
@@ -144,7 +144,7 @@ export default async function BookingPendings({ params }: BookingPendingsProps) 
                                                         .replace(/^./, (c) => c.toUpperCase())}
                                                 </p>
 
-                                                <p className="text-xl font-semibold pl-4">
+                                                <p className="text-xl font-semibold pl-4 text-[var(--text-on-primary)]">
                                                     {new Date(booking.date).toLocaleDateString("pt-BR",
                                                         {
                                                             day: "2-digit",

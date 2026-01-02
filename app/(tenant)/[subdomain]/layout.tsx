@@ -55,6 +55,9 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
     --primary-foreground: ${themeVariables["--primary-foreground"]};
     --secondary: ${themeVariables["--secondary"]};
     --secondary-foreground: ${themeVariables["--secondary-foreground"]};
+    --text-on-background: ${themeVariables["--text-on-background"]};
+    --text-on-primary: ${themeVariables["--text-on-primary"]};
+    --text-on-secondary: ${themeVariables["--text-on-secondary"]};
 
   }`;
   return (
@@ -62,7 +65,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
       <style dangerouslySetInnerHTML={{ __html: rootCss }} />
       <div
         style={themeVariables}
-        className="min-h-screen bg--background text-foreground"
+        className="min-h-screen bg-background"
       >
         <AuthProvider>
           <Toaster position="top-center" />

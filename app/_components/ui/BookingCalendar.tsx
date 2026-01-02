@@ -255,7 +255,7 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                                 type="button"
                                 onClick={handleCreateBooking}
                                 disabled={!selectedDay || !selectedTime || !service}
-                                className="bg-[var(--secondary)] h-12 w-full hover:bg-zinc-800 font-bold"
+                                className="bg-secondary h-12 w-full hover:bg-zinc-800 font-bold"
                             >
                                 Confirmar Agendamento
                             </Button>

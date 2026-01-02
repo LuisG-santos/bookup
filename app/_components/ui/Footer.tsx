@@ -18,10 +18,8 @@ const FooterPage = async ({ commerceId }: FooterPageProps) => {
 
     return ( 
        <footer className="justify-end">
-        <Card className="py-1 px-2 rounded-none bg-[var(--primary)]">
+        <Card className="py-1 px-2 rounded-none bg-primary">
           <CardContent className="px-5 py-6 ">
-
-
 
             <div className="pt-3 space-y-3">
               {CommerceContacts?.phones.map((phone, index) => (

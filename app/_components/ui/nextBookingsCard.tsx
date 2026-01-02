@@ -40,10 +40,8 @@ const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
                         )}</p>
                     </div>
 
-
                     <div className="flex justify-between items-center border-t space-x-5 border-zinc-700 p-3 mt-5 lg:justify-start">
                         <FinalizeButton bookingId={nextBooking.id} />
-
                         <CancelButton bookingId={nextBooking.id} className="w-32" />
                     </div>
 
