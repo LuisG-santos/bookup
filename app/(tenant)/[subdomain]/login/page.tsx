@@ -22,7 +22,7 @@ export default async function LoginPage({ params }: PageProps) {
   const heroImageURL = commerce?.heroImageURL ?? undefined;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[var(--primary)]" >
+    <div className="flex justify-center items-center min-h-screen bg-primary" >
 
       <LoginForms heroImageURL={heroImageURL}/>
     </div>

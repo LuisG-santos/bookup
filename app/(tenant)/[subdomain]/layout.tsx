@@ -4,10 +4,17 @@ import type { ReactNode, CSSProperties } from "react";
 import { getTextColorsForBackground, hexToHslTriplet } from "@/app/utils/color";
 import { Toaster } from "react-hot-toast";
 import { root } from "postcss";
+import { Viewport } from "next";
 
 type TenantLayoutProps = {
   children: ReactNode;
   params: Promise<{ subdomain: string }>;
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default async function TenantLayout({ children, params }: TenantLayoutProps) {
@@ -24,8 +31,6 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
   const textColorsBackground = getTextColorsForBackground(commerce.backgroundColor);
   const textColorsPrimary = getTextColorsForBackground(commerce.primaryColor);
   const textColorsSecondary = getTextColorsForBackground(commerce.secondaryColor);
-
-
 
   const themeVariables: CSSProperties & { [key: string]: string } = {
     // vars de cor usadas pelo shadcn (bg-background, bg-primary, bg-secondary, etc.)

@@ -33,7 +33,7 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
     
     return (
 
-        <SheetContent>
+        <SheetContent className="bg-primary">
             <SheetHeader>
                 <SheetTitle className=" font-semibold text-[var(--text-secondary)]">Menu</SheetTitle>
             </SheetHeader>

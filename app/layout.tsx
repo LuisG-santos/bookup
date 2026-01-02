@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Viewport } from "next"
+import { Viewport } from "next";
+import { MuiLocalizationProvider } from "@/app/_components/ui/MuiLocalizationProvider";
 
 export const metadata: Metadata = {
   title: "Belivio",
@@ -41,7 +42,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          {children}
+        <MuiLocalizationProvider>{children}</MuiLocalizationProvider>
       </body>
     </html>
   );

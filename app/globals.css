@@ -46,14 +46,13 @@
   }
 
   [data-radix-portal] {
-  --background: var(--background);
-  --primary: var(--primary);
-  --secondary: var(--secondary);
-  --text-on-background: var(--text-on-background);
-  --text-on-primary: var(--text-on-primary);
-  --text-on-secondary: var(--text-on-secondary);
-}
-
+    --background: var(--background);
+    --primary: var(--primary);
+    --secondary: var(--secondary);
+    --text-on-background: var(--text-on-background);
+    --text-on-primary: var(--text-on-primary);
+    --text-on-secondary: var(--text-on-secondary);
+  }
 
   /* Se quiser tema dark separado no futuro */
   .dark {
@@ -80,3 +79,4 @@
     -webkit-text-size-adjust: 100%;
   }
 }
+

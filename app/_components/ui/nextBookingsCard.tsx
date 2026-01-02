@@ -16,7 +16,7 @@ type NextBookingsCardProps = {
 
 const NextBookingCard = ({ nextBooking }: NextBookingsCardProps) => {
     return (
-        <Card className="m-4 p-4 bg-[var(--primary)] shadow-[0_20px_30px_rgba(0,0,0,.55)]">
+        <Card className="m-4 p-4 bg-primary shadow-[0_20px_30px_rgba(0,0,0,.55)]">
             <CardHeader className="flex border-b border-solid border-zinc-700">
                 <NotebookPenIcon />
                 <CardTitle className="text-[var(--text-on-primary)] text-lg font-semibold mb-4">Próximo Agendamento</CardTitle>

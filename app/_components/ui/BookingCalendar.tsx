@@ -9,6 +9,7 @@ import { format, set } from "date-fns"
 import { toast } from "react-hot-toast";
 import { useRouter, useParams } from "next/navigation";
 import { getBookings } from "@/app/_actions/getBookings";
+import { MuiCalendar } from "./calendarMUI"
 
 type BookingCalendarProps = {
     service: {
@@ -33,7 +34,7 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
         endTimeLabel: string;
     };
 
-    const [selectedDay, setSelectedDay] = useState<Date | undefined>(new Date());
+    const [selectedDay, setSelectedDay] = useState<Date>(new Date());
     const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined);
     const [dayBookings, setDayBookings] = useState<any[]>([]);
     const [slots, setSlots] = useState<Slot[]>([]);
@@ -45,13 +46,11 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleDateSelect = async (date: Date | undefined) => {
+    const handleDateSelect = async (date: Date) => {
         setSelectedDay(date);
         setSlots([]);
         setDayBookings([]);
         setSelectedTime(undefined);
-
-        if (!date) return;
 
         try {
             setLoadingDay(true);
@@ -175,16 +174,12 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
 
 
     return (
-        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg--background text-[var(--text-on-background)]">
-            <Calendar
-                className="w-full max-w-full justify-center border border-solid border-zinc-700 rounded-3xl p-4 text-white shadow-xl  bg-primary text-[var(--text-on-background)] "
-                mode="single"
-                locale={ptBR}
-                disabled={{ before: new Date() }}
-                selected={selectedDay}
-                onSelect={handleDateSelect}
-            />
-
+        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg-background text-[var(--text-on-background)]">
+            
+            <div className="bg-primary rounded-3xl w-full">
+                <MuiCalendar value={selectedDay} onSelect={handleDateSelect} minDate={new Date()} />
+            </div>
+            
             {selectedDay && (
                 <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
                     <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">

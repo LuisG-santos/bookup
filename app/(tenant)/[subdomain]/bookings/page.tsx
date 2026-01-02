@@ -100,7 +100,7 @@ export default async function BookingsPage({ params }: PageProps) {
 
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
+        <div className="relative min-h-screen w-full flex flex-col bg-background text-[var(--text-on-background)]">
             <div className="relative w-full">
                 <Button
                     size="icon"
@@ -138,7 +138,7 @@ export default async function BookingsPage({ params }: PageProps) {
                     activeBookings.map((booking) => (
                         <div key={booking.id} className="w-full max-w-md mt-4">
 
-                            <Card className="mt-6 p-3 bg-[var(--primary)] shadow-[0_5px_7px_rgba(0,0,0,.55)]">
+                            <Card className="mt-6 p-3 bg-primary shadow-[0_5px_7px_rgba(0,0,0,.55)]">
 
                                 <CardContent className="flex justify-between p-0">
 
@@ -198,7 +198,7 @@ export default async function BookingsPage({ params }: PageProps) {
                                 {historyBookings.map((booking) => (
                                     <Card
                                         key={booking.id}
-                                        className="mt-6 p-3 opacity-65 bg-[var(--primary)] shadow-[0_5px_7px_rgba(0,0,0,.55)]"
+                                        className="mt-6 p-3 opacity-65 bg-primary shadow-[0_5px_7px_rgba(0,0,0,.55)]"
                                     >
                                         <CardContent className="flex justify-between p-0">
 

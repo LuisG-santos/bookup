@@ -144,7 +144,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
     const nextBooking = upcoming ?? overdue ?? null;
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col bg-[var(--background)] text-[var(--text-on-background)]">
+        <div className="relative min-h-screen w-full flex flex-col bg-background text-[var(--text-on-background)]">
 
             <HeaderOwner subdomain={subdomain} />
 
@@ -171,7 +171,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                 w-full
                                 rounded-lg
                                 border border-zinc-800
-                                 bg-[var(--primary)]
+                                 bg-primary
                                 p-5
                                 text-left
                                 transition
@@ -215,7 +215,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                 w-full
                                 rounded-lg
                                 border border-zinc-800
-                                 bg-[var(--primary)]
+                                 bg-primary
                                 p-5
                                 text-left
                                 transition
@@ -223,7 +223,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                  hover:border-zinc-800
                                 focus:outline-none
                                 focus:ring-2
-                                focus:ring-[var(--primary)]
+                                focus:ring-primary
                                 "
                     >
                         <Link href={`/${subdomain}/OwnerPages/bookingsToday`}>
@@ -260,7 +260,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                 w-full
                                 rounded-lg
                                 border border-zinc-800
-                                 bg-[var(--primary)]
+                                 bg-primary
                                 p-5
                                 text-left
                                 transition
@@ -305,7 +305,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
                                 w-full
                                 rounded-lg
                                 border border-zinc-800
-                                 bg-[var(--primary)]
+                                 bg-primary
                                 p-5
                                 text-left
                                 transition

@@ -12,7 +12,9 @@ import { Tag } from "lucide-react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-
+import { Calendar } from "./calendar";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { MuiCalendar } from "./calendarMUI";
 
 type HomeContentProps = {
   commerceId: string;
@@ -37,15 +39,15 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
   const userId = session?.user?.id;
 
   const membership = await db.commerceMembership.findFirst({
-        where: {
-            userId,
-            commerceId: commerceId,
-            role: "OWNER",
-        },
-    });
+    where: {
+      userId,
+      commerceId: commerceId,
+      role: "OWNER",
+    },
+  });
 
-    const isOwner = membership?.role === "OWNER";
-  
+  const isOwner = membership?.role === "OWNER";
+
   let nextBookingDTO: {
     id: string;
     date: string;
@@ -181,7 +183,7 @@ export default async function HomeContent({ commerceId, basePath, commerceName, 
             </Button>
           ))}
         </div>
-
+        
         <ClientBanner title={Herocommerce?.heroTitle} subtitle={Herocommerce?.heroSubtitle} imageUrl={Herocommerce?.heroImageURL ?? "/cartoonH.png"} className="mt-6" />
         <BookingItem user={{ name: session?.user?.name ?? "", image: session?.user?.image ?? "" }} booking={nextBookingDTO} />
 

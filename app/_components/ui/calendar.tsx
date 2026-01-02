@@ -7,7 +7,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react"
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
-
+import { useEffect } from "react";
 import { cn } from "@/app/_lib/utils"
 import { Button, buttonVariants } from "@/app/_components/ui/button"
 
@@ -25,15 +25,47 @@ function Calendar({
 }) {
   const defaultClassNames = getDefaultClassNames()
 
+  useEffect(() => {
+    const fixCalendar = () => {
+      const days = document.querySelectorAll('.rdp-day');
+      days.forEach((day) => {
+        const button = day.querySelector('button');
+        if (button) {
+          button.style.width = '100%';
+          button.style.height = '100%';
+        }
+      });
+    };
+
+    fixCalendar();
+
+    const observer = new MutationObserver(fixCalendar);
+    const calendar = document.querySelector('[data-slot="calendar"]');
+
+    if (calendar) {
+      observer.observe(calendar, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => observer.disconnect();
+  }, []); // array vazio = roda apenas uma vez
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "bg-background group/calendar p-3 [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "bg-background group/calendar p-3 w-full overflow-hidden", // Adicione w-full overflow-hidden
         String.raw`rtl:**:[.rdp-button_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button_previous>svg]:rotate-180`,
         className
       )}
+      style={{
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+      }}
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: (date) =>
@@ -41,7 +73,7 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-  		root: cn("w-full max-w-full overflow-x-hidden", defaultClassNames.root),
+        root: cn("w-full", defaultClassNames.root),
         months: cn(
           "flex gap-4 flex-col md:flex-row relative",
           defaultClassNames.months
@@ -100,7 +132,7 @@ function Calendar({
           defaultClassNames.week_number
         ),
         day: cn(
-          "relative w-full h-full p-0 text-center rounded-lg [&:last-child[data-selected=true]_button]:rounded-l-md group/day aspect-square select-none hover:bg-zinc-300",
+          "relative w-full h-full p-0 text-center [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
           props.showWeekNumber
             ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-md"
             : "[&:first-child[data-selected=true]_button]:rounded-l-md",
@@ -133,7 +165,13 @@ function Calendar({
             <div
               data-slot="calendar"
               ref={rootRef}
-              className={cn(className)}
+              className={cn("w-full overflow-hidden", className)}
+              style={{
+                width: '100%',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                contain: 'layout style paint',
+              }}
               {...props}
             />
           )
