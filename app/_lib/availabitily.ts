@@ -20,7 +20,7 @@ export async function getAvailableSlots({
   commerceId,
   serviceId,
   date,
-  slotIntervalMinutes = 15,
+  slotIntervalMinutes = 30,
 }: GetAvailableSlotsParams): Promise<Slot[]> {
   
   const [commerce, service] = await Promise.all([
@@ -106,8 +106,7 @@ if (isSameDay(date, now)) {
 
   const busy: Interval[] = bookings.map((b) => {
     const start = dateToMinutes(b.date);
-    const duration = b.service.duration; // duração real do serviço do booking
-    const end = start + duration;
+    const end = dateToMinutes(b.endDate);
     return { start, end };
   });
 

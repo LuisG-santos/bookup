@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       commerceId,
       serviceId,
       date,
-      slotIntervalMinutes: 15,
+      slotIntervalMinutes: 30,
     });
 
     return NextResponse.json({ slots });

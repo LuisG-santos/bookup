@@ -151,7 +151,8 @@ model Booking {
   userId     String   // quem agendou (cliente)
   serviceId  String
   commerceId String
-  date       DateTime
+  date       DateTime @db.Timestamptz(3)
+  endDate    DateTime @db.Timestamptz(3)
   status     BookingStatus @default(PENDING)   // ex: PENDING, CONFIRMED, CANCELED
 
   createdAt  DateTime @default(now())
