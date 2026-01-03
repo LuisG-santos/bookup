@@ -64,7 +64,8 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
             const [bookings, availabilityRes] = await Promise.all([
                 getBookings({ date, serviceId: service.id }),
                 fetch(
-                    `/api/availability?date=${dateParam}&serviceId=${service.id}&commerceId=${service.commerceId}`
+                    `/api/availability?date=${dateParam}&serviceId=${service.id}&commerceId=${service.commerceId}`, 
+                    {cache: "no-store"}
                 ),
             ]);
 
@@ -156,17 +157,10 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
 
             if (!selectedTime) return;
             //
-            setSlots((prevSlots) =>
-                prevSlots.filter((slot) => slot.startTimeLabel !== selectedTime)
-            );
-            setSelectedTime(undefined);
 
             toast.success("Agendamento criado com sucesso!");
 
-            setSlots((prev) =>
-                prev.filter((slot: any) => slot.startTimeLabel !== selectedTime)
-            );
-            setSelectedTime(undefined);
+            await handleDateSelect(new Date(selectedDay));
 
             router.push(basePath);
             router.refresh();

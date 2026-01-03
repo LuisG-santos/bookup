@@ -81,12 +81,9 @@ if (isSameDay(date, now)) {
         in: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
       },
     },
-    include: {
-      service: {
-        select: {
-          duration: true,
-        },
-      },
+    select: {
+      date: true,
+      endDate: true,
     },
     orderBy: {
       date: "asc",
@@ -106,7 +103,7 @@ if (isSameDay(date, now)) {
 
   const busy: Interval[] = bookings.map((b) => {
     const start = dateToMinutes(b.date);
-    const end = start + b.service.duration;
+    const end = dateToMinutes(b.endDate);
     return { start, end };
   });
 
