@@ -4,11 +4,12 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "./button"
 import { Card, CardContent, CardHeader, CardTitle } from "./card"
-import { format, set } from "date-fns"
+import { format, set, startOfDay } from "date-fns"
 import { toast } from "react-hot-toast";
 import { useRouter, useParams } from "next/navigation";
 import { getBookings } from "@/app/_actions/getBookings";
 import { MuiCalendar } from "./calendarMUI"
+import { start } from "repl"
 
 type BookingCalendarProps = {
     service: {
@@ -46,7 +47,8 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
     }, []);
 
     const handleDateSelect = async (date: Date) => {
-        setSelectedDay(date);
+        const day = startOfDay(date);
+        setSelectedDay(day);
         setSlots([]);
         setDayBookings([]);
         setSelectedTime(undefined);
@@ -112,6 +114,8 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
             const newDate = set(selectedDay, {
                 hours: hour,
                 minutes: minute,
+                seconds: 0,
+                milliseconds: 0,
             });
 
             const res = await fetch("/api/bookings", {
