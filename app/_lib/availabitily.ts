@@ -106,7 +106,7 @@ if (isSameDay(date, now)) {
 
   const busy: Interval[] = bookings.map((b) => {
     const start = dateToMinutes(b.date);
-    const end = dateToMinutes(b.endDate);
+    const end = start + b.service.duration;
     return { start, end };
   });
 
