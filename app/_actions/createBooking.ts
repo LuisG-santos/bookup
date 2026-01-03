@@ -1,5 +1,5 @@
 "use server"
-
+import { revalidatePath } from "next/cache";
 import { db } from "../_lib/prisma"
 import { BookingStatus } from "@prisma/client";
 import { addMinutes } from "date-fns";
@@ -35,4 +35,5 @@ export const createBooking = async (params: CreateBookingParams) => {
             userId: params.userId,
         } 
     }); 
+    revalidatePath(`/commerce/${params.commerceId}/bookings`);
 }
