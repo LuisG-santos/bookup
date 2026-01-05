@@ -1,6 +1,7 @@
 import { db } from "@/app/_lib/prisma";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import { BookingStatus } from "@prisma/client";
+import { revalidate } from "../api/availability/route";
 
 type GetAvailableSlotsParams = {
   commerceId: string;
@@ -141,6 +142,6 @@ if (isSameDay(date, now)) {
     }
 
     current += slotIntervalMinutes;
-  }
+  };
   return slots;
 }

@@ -155,11 +155,16 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                 return;
             }
 
-            if (!selectedTime) return;
-            //
-
             toast.success("Agendamento criado com sucesso!");
 
+            if (selectedTime) {
+                setSlots((prev) =>
+                    prev.filter((slot) => slot.startTimeLabel !== selectedTime)
+                );
+                setSelectedTime(undefined);
+            }
+
+            // recarrega os slots do dia a partir do backend
             await handleDateSelect(new Date(selectedDay));
 
             router.push(basePath);
@@ -172,14 +177,14 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
     };
 
     return (
-        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-5 bg-background text-[var(--text-on-background)]">
+        <div className="flex flex-col justify-center min-h-screen items-center py-6 space-y-4 bg-background text-[var(--text-on-background)] ">
             
-            <div className="bg-primary rounded-3xl w-full">
+            <div className="bg-primary rounded-3xl w-full border-2 border-zinc-400 shadow-xl">
                 <MuiCalendar value={selectedDay} onSelect={handleDateSelect} minDate={new Date()} />
             </div>
             
             {selectedDay && (
-                <div className="pt-8 p-4 bg-primary rounded-3xl w-full">
+                <div className="pt-8 p-4 bg-primary rounded-3xl w-full border-2 border-zinc-400 shadow-xl">
                     <h2 className="font-semibold text-lg text-[var(--text-on-background)] pb-2 border-b border-[var(--text-on-primary)]">
                         Selecione o horário
                     </h2>
@@ -194,7 +199,7 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                         </p>
                     )}
 
-                    <div className="grid grid-cols-4 gap-3 mt-3">
+                    <div className="grid grid-cols-4 gap-3 mt-3 ">
                         {slots.map((slot) => (
                             <Button
                                 key={slot.startMinutes}
@@ -211,8 +216,8 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
                 </div>
             )}
 
-            <div className="flex justify-center p-4 w-full mt-4">
-                <Card className=" bg-primary w-full border-2 border-secondary rounded-3xl shadow-xl">
+            <div className="flex justify-center p-0 w-full mt-4">
+                <Card className=" bg-primary w-full border-2 border-zinc-400 rounded-3xl shadow-xl">
                     <CardHeader className=" border-b border-[var(--text-on-primary)] justify-center">
                         <CardTitle className="pb-2 font-bold text-lg text-[var(--text-on-primary)]">
                             Seu agendamento
