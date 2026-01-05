@@ -2,8 +2,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/_lib/prisma";
 import { BookingStatus, Prisma } from "@prisma/client";
-import { addMinutes, endOfDay, startOfDay } from "date-fns";
+import { addMinutes} from "date-fns";
 import { revalidatePath } from "next/cache";
+import {toZonedTime ,fromZonedTime } from "date-fns-tz";
 
 function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
   return aStart < bEnd && aEnd > bStart;
@@ -13,6 +14,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { userId, serviceId, commerceId, date } = body ?? {};
+    const TZ = "America/Sao_Paulo";
 
     if (!userId || !serviceId || !commerceId || !date) {
       return NextResponse.json({ error: "Dados obrigatórios ausentes." }, { status: 400 });
@@ -61,8 +63,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const startMin = start.getHours() * 60 + start.getMinutes();
-    const endMin = end.getHours() * 60 + end.getMinutes();
+    const startZoned = toZonedTime(start, TZ);
+    const endZoned = toZonedTime(end, TZ);
+
+    const startMin = startZoned.getHours() * 60 + startZoned.getMinutes();
+    const endMin = endZoned.getHours() * 60 + endZoned.getMinutes();
 
     if (
       startMin < commerce.openingTimeMinutes ||
@@ -74,8 +79,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const dayStart = startOfDay(start);
-    const dayEnd = endOfDay(start);
+    const y = startZoned.getFullYear();
+    const m = String(startZoned.getMonth() + 1).padStart(2, "0");
+    const d = String(startZoned.getDate()).padStart(2, "0");
+    const dayKey = `${y}-${m}-${d}`;
+
+    const dayStart = fromZonedTime(`${dayKey}T00:00:00`, TZ);
+    const dayEnd = fromZonedTime(`${dayKey}T23:59:59.999`, TZ);
 
     // Regra: mesmo usuário não pode agendar o mesmo serviço no mesmo dia
     const existingSameService = await db.booking.findFirst({

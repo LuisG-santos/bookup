@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAvailableSlots } from "@/app/_lib/availabitily";
+import { fromZonedTime } from "date-fns-tz";
 
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export async function GET(req: NextRequest) {
     const commerceId = searchParams.get("commerceId");
     const serviceId = searchParams.get("serviceId");
     const dateStr = searchParams.get("date");
+    const TZ = "America/Sao_Paulo";
 
     if (!commerceId || !serviceId || !dateStr) {
       return NextResponse.json(
@@ -19,7 +21,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const date = new Date(`${dateStr}T00:00:00`); 
+    const date = fromZonedTime(`${dateStr}T00:00:00`, TZ); 
 
     const slots = await getAvailableSlots({
       commerceId,
