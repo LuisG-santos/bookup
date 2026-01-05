@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAvailableSlots } from "@/app/_lib/availabitily";
 
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -26,7 +27,14 @@ export async function GET(req: NextRequest) {
       date,
     });
 
-    return NextResponse.json({ slots });
+    return NextResponse.json({ slots },
+      {headers:{
+        'Cache-Control': 'no-store',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store'
+      }
+    }
+    );
   } catch (error) {
     console.error("Erro interno em /api/availability:", error);
     return NextResponse.json(

@@ -1,6 +1,6 @@
 import { db } from "@/app/_lib/prisma";
-import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import { BookingStatus } from "@prisma/client";
+import { toZonedTime, fromZonedTime } from "date-fns-tz";
 
 type GetAvailableSlotsParams = {
   commerceId: string;
@@ -24,6 +24,8 @@ export async function getAvailableSlots({
   baseStepMinutes = 5,
   displayStepMinutes,
 }: GetAvailableSlotsParams): Promise<Slot[]> {
+
+  const TZ = "America/Sao_Paulo";
 
   const [commerce, service] = await Promise.all([
     db.commerce.findUnique({
@@ -58,20 +60,30 @@ export async function getAvailableSlots({
   let minStart = opening;
 
   // se for hoje, não mostrar horários que já passaram
-  const now = new Date();
-  if (isSameDay(date, now)) {
-    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const nowZoned = toZonedTime(new Date(), TZ);
+  const dateZoned = toZonedTime(date, TZ);
 
-    const roundedNow =
-      Math.ceil(nowMinutes / baseStepMinutes) * baseStepMinutes;
+  const isSameDayInTz =
+    nowZoned.getFullYear() === dateZoned.getFullYear() &&
+    nowZoned.getMonth() === dateZoned.getMonth() &&
+    nowZoned.getDate() === dateZoned.getDate();
 
+  if (isSameDayInTz) {
+    const nowMinutes = nowZoned.getHours() * 60 + nowZoned.getMinutes();
+    const roundedNow = Math.ceil(nowMinutes / baseStepMinutes) * baseStepMinutes;
     minStart = Math.max(opening, roundedNow);
   }
 
-  // 2) buscar TODOS os bookings do DIA para ESTE COMÉRCIO
-  const dayStart = startOfDay(date);
-  const dayEnd = endOfDay(date);
 
+  const y = dateZoned.getFullYear();
+  const m = String(dateZoned.getMonth() + 1).padStart(2, "0");
+  const d = String(dateZoned.getDate()).padStart(2, "0");
+  const dayKey = `${y}-${m}-${d}`;
+
+  // Range do dia no TZ convertido para UTC (pra query no Postgres)
+  const dayStart = fromZonedTime(`${dayKey}T00:00:00`, TZ);
+  const dayEnd = fromZonedTime(`${dayKey}T23:59:59.999`, TZ);
+  // 2) buscar TODOS os bookings do DIA para ESTE COMÉRCIO
   const bookings = await db.booking.findMany({
     where: {
       commerceId,
@@ -92,7 +104,10 @@ export async function getAvailableSlots({
     },
   });
 
-  const dateToMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
+  const dateToMinutesInTz = (d: Date, tz: string = TZ) => {
+    const zoned = toZonedTime(d, tz);
+    return zoned.getHours() * 60 + zoned.getMinutes();
+  }
 
   const formatMinutes = (total: number) => {
     const h = Math.floor(total / 60);
@@ -104,8 +119,8 @@ export async function getAvailableSlots({
   type Interval = { start: number; end: number };
 
   const busy: Interval[] = bookings.map((b) => {
-    const start = dateToMinutes(b.date);
-    const end = dateToMinutes(b.endDate);
+    const start = dateToMinutesInTz(b.date, TZ);
+    const end = dateToMinutesInTz(b.endDate, TZ);
     return { start, end };
   });
 
@@ -132,24 +147,24 @@ export async function getAvailableSlots({
 
   let current = minStart;
 
-while (current + serviceDuration <= closing) {
-  const start = current;
-  const end = current + serviceDuration;
+  while (current + serviceDuration <= closing) {
+    const start = current;
+    const end = current + serviceDuration;
 
-  if (!overlaps(start, end)) {
-    // FILTRO DE EXIBIÇÃO (não cria slot fixo)
-    if (start % displayStep === 0) {
-      slots.push({
-        startMinutes: start,
-        endMinutes: end,
-        startTimeLabel: formatMinutes(start),
-        endTimeLabel: formatMinutes(end),
-      });
+    if (!overlaps(start, end)) {
+      // FILTRO DE EXIBIÇÃO (não cria slot fixo)
+      if (start % displayStep === 0) {
+        slots.push({
+          startMinutes: start,
+          endMinutes: end,
+          startTimeLabel: formatMinutes(start),
+          endTimeLabel: formatMinutes(end),
+        });
+      }
     }
-  }
 
-  // AVANÇA SEMPRE PELO BASE STEP
-  current += baseStepMinutes;
-}
+    // AVANÇA SEMPRE PELO BASE STEP
+    current += baseStepMinutes;
+  }
   return slots;
 }
