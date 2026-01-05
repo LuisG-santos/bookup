@@ -18,13 +18,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const date = new Date(dateStr); 
+    const date = new Date(`${dateStr}T00:00:00`); 
 
     const slots = await getAvailableSlots({
       commerceId,
       serviceId,
       date,
-      slotIntervalMinutes: 30,
     });
 
     return NextResponse.json({ slots });

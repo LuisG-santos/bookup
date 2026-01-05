@@ -1,13 +1,13 @@
 import { db } from "@/app/_lib/prisma";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import { BookingStatus } from "@prisma/client";
-import { revalidate } from "../api/availability/route";
 
 type GetAvailableSlotsParams = {
   commerceId: string;
   serviceId: string;
   date: Date;
-  slotIntervalMinutes?: number;
+  baseStepMinutes?: number;     // varredura interna (ex.: 5)
+  displayStepMinutes?: number;
 };
 
 export type Slot = {
@@ -21,9 +21,10 @@ export async function getAvailableSlots({
   commerceId,
   serviceId,
   date,
-  slotIntervalMinutes = 30,
+  baseStepMinutes = 5,
+  displayStepMinutes,
 }: GetAvailableSlotsParams): Promise<Slot[]> {
-  
+
   const [commerce, service] = await Promise.all([
     db.commerce.findUnique({
       where: { id: commerceId },
@@ -56,16 +57,16 @@ export async function getAvailableSlots({
 
   let minStart = opening;
 
-// se for hoje, não mostrar horários que já passaram
-const now = new Date();
-if (isSameDay(date, now)) {
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  // se for hoje, não mostrar horários que já passaram
+  const now = new Date();
+  if (isSameDay(date, now)) {
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const roundedNow =
-    Math.ceil(nowMinutes / slotIntervalMinutes) * slotIntervalMinutes;
+    const roundedNow =
+      Math.ceil(nowMinutes / baseStepMinutes) * baseStepMinutes;
 
-  minStart = Math.max(opening, roundedNow);
-}
+    minStart = Math.max(opening, roundedNow);
+  }
 
   // 2) buscar TODOS os bookings do DIA para ESTE COMÉRCIO
   const dayStart = startOfDay(date);
@@ -126,13 +127,18 @@ if (isSameDay(date, now)) {
   // 4) gerar slots livres
   const slots: Slot[] = [];
 
+  const displayStep = displayStepMinutes ??
+    (serviceDuration <= 15 ? serviceDuration : 15);
+
   let current = minStart;
 
-  while (current + serviceDuration <= closing) {
-    const start = current;
-    const end = current + serviceDuration;
+while (current + serviceDuration <= closing) {
+  const start = current;
+  const end = current + serviceDuration;
 
-    if (!overlaps(start, end)) {
+  if (!overlaps(start, end)) {
+    // FILTRO DE EXIBIÇÃO (não cria slot fixo)
+    if (start % displayStep === 0) {
       slots.push({
         startMinutes: start,
         endMinutes: end,
@@ -140,8 +146,10 @@ if (isSameDay(date, now)) {
         endTimeLabel: formatMinutes(end),
       });
     }
+  }
 
-    current += slotIntervalMinutes;
-  };
+  // AVANÇA SEMPRE PELO BASE STEP
+  current += baseStepMinutes;
+}
   return slots;
 }

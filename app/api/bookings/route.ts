@@ -5,22 +5,8 @@ import { BookingStatus, Prisma } from "@prisma/client";
 import { addMinutes, endOfDay, startOfDay } from "date-fns";
 import { revalidatePath } from "next/cache";
 
-const SLOT_INTERVAL_MINUTES = 30;
-
-function normalizeToSlot(date: Date, slotIntervalMinutes: number) {
-  const d = new Date(date);
-  d.setSeconds(0, 0);
-
-  const minutes = d.getMinutes();
-  // mantém no grid (se seu UI sempre manda certinho, isso só padroniza)
-  const floored = Math.floor(minutes / slotIntervalMinutes) * slotIntervalMinutes;
-  d.setMinutes(floored);
-
-  return d;
-}
-
 function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-  return aStart < bEnd && aEnd > bStart; // [start,end) vs [start,end) na prática
+  return aStart < bEnd && aEnd > bStart;
 }
 
 export async function POST(req: NextRequest) {
@@ -48,12 +34,42 @@ export async function POST(req: NextRequest) {
     }
 
     // Normaliza + calcula endDate
-    const start = normalizeToSlot(rawDate, SLOT_INTERVAL_MINUTES);
+    const start = new Date(rawDate);
+    start.setSeconds(0, 0);
     const end = addMinutes(start, service.duration);
 
     if (start < new Date()) {
       return NextResponse.json(
         { error: "A data do agendamento não pode ser no passado." },
+        { status: 400 }
+      );
+    }
+
+    const commerce = await db.commerce.findUnique({
+      where: { id: commerceId },
+      select: {
+        openingTimeMinutes: true,
+        closingTimeMinutes: true,
+        subdomain: true,
+      },
+    });
+
+    if (!commerce) {
+      return NextResponse.json(
+        { error: "Commerce não encontrado." },
+        { status: 404 }
+      );
+    }
+
+    const startMin = start.getHours() * 60 + start.getMinutes();
+    const endMin = end.getHours() * 60 + end.getMinutes();
+
+    if (
+      startMin < commerce.openingTimeMinutes ||
+      endMin > commerce.closingTimeMinutes
+    ) {
+      return NextResponse.json(
+        { error: "Fora do horário de funcionamento." },
         { status: 400 }
       );
     }
@@ -114,11 +130,6 @@ export async function POST(req: NextRequest) {
         endDate: end,
         status: BookingStatus.PENDING,
       },
-    });
-
-    const commerce = await db.commerce.findUnique({
-      where: { id: commerceId },
-      select: { subdomain: true },
     });
 
     revalidatePath(`/${commerce?.subdomain}`);

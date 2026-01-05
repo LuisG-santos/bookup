@@ -9,7 +9,6 @@ import { toast } from "react-hot-toast";
 import { useRouter, useParams } from "next/navigation";
 import { getBookings } from "@/app/_actions/getBookings";
 import { MuiCalendar } from "./calendarMUI"
-import { start } from "repl"
 
 type BookingCalendarProps = {
     service: {
@@ -56,7 +55,7 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
         try {
             setLoadingDay(true);
 
-            const dateParam = date.toISOString();
+            const dateParam = format(day, "yyyy-MM-dd");
 
             console.log("local", new Date().toString());
             console.log("Iso", new Date().toISOString());
@@ -156,19 +155,10 @@ export function BookingCalendar({ service, }: BookingCalendarProps) {
             }
 
             toast.success("Agendamento criado com sucesso!");
-
-            if (selectedTime) {
-                setSlots((prev) =>
-                    prev.filter((slot) => slot.startTimeLabel !== selectedTime)
-                );
-                setSelectedTime(undefined);
-            }
-
-            // recarrega os slots do dia a partir do backend
-            await handleDateSelect(new Date(selectedDay));
+            setSelectedTime(undefined);
+            await handleDateSelect(selectedDay);
 
             router.push(basePath);
-            router.refresh();
 
         } catch (error) {
             console.error(error);
