@@ -31,9 +31,13 @@ function getSubdomain(host: string) {
 export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     const pathname = url.pathname;
+    const proto = request.headers.get("x-forwarded-proto");
     const host = stripPort(getHostname(request));
-    console.log("[MW] host = ", request.headers.get("host"), "path =", request.nextUrl.pathname);
 
+    if (process.env.NODE_ENV === "production" && proto !== "https") {
+        return NextResponse.redirect(`https://${host}${url.pathname}${url.search}`, 301);
+    }
+    
     if(
         pathname.startsWith("/api/") ||
         pathname.startsWith("/_next/") ||

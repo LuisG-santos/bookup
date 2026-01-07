@@ -3,8 +3,11 @@ import { db } from "@/app/_lib/prisma";
 import type { ReactNode, CSSProperties } from "react";
 import { getTextColorsForBackground, hexToHslTriplet } from "@/app/utils/color";
 import { Toaster } from "react-hot-toast";
-import { root } from "postcss";
 import { Viewport } from "next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { getServerSession } from "next-auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 type TenantLayoutProps = {
   children: ReactNode;
@@ -19,6 +22,14 @@ export const viewport: Viewport = {
 
 export default async function TenantLayout({ children, params }: TenantLayoutProps) {
   const { subdomain } = await params;
+  const session = await getServerSession(authOptions);
+
+  if (!session){
+    const headerlist = await headers();
+    const host = headerlist.get("host");
+    const callbackUrl = `https://${host}$/`;
+    redirect(`https://belivio.com.br/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  }
 
   const commerce = await db.commerce.findUnique({
     where: { subdomain },

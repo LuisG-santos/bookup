@@ -40,7 +40,7 @@ export default function RootLayout({
     <html lang="pt-BR" className="dark">
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background min-h-screen text-foreground`}
       >
         <MuiLocalizationProvider>{children}</MuiLocalizationProvider>
       </body>

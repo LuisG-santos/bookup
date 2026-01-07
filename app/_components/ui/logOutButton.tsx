@@ -1,8 +1,7 @@
-import Link from "next/link";
-import { HomeIcon, LogOutIcon, CalendarClockIcon, ClipboardCheckIcon } from "lucide-react";
+
+import { LogOutIcon} from "lucide-react";
 import { Button } from "./button";
-import { useParams } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "./dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useState } from "react";
@@ -13,16 +12,13 @@ type Props = {
 }
 
 export default function LogOutButton({ className }: Props) {
-    const params = useParams<{ subdomain: string }>();
-    const subdomain = params?.subdomain;
-    const base = subdomain ? `/${subdomain}/OwnerPages` : "/OwnerPages";
-    const loginPage = subdomain ? `/${subdomain}/login` : '/login';
-    const { data, status } = useSession();
+
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
-    const handleLogout = () => {
-        signOut({ callbackUrl: loginPage });
+    const handleLogout = async () => {
+        setIsLoading(true);
+        await signOut({ callbackUrl: "https://belivio.com.br/login" });
     }
 
     return (

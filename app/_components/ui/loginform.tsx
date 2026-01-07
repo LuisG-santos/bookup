@@ -1,38 +1,33 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { Button } from "./button";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-type LoginFormsProps = {
-  heroImageURL?: string;
-};
+export default function LoginForms() {
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") ?? "https://belivio.com.br";
 
-export default function LoginForms({ heroImageURL }: LoginFormsProps) {
-    const params = useParams<{ subdomain: string }>();
-    const subdomain = params?.subdomain;
-   const handleLoginWithGoogle = async() => {
-    await signIn("google", {
-      callbackUrl: `/${subdomain}`,
-    });
-  };
-
-  return ( 
-    <div className="relative h-screen flex items-end w-full bg-gray-1000">
+    const handleLoginWithGoogle = async () => {
+      await signIn("google", { callbackUrl });
+    };
+    
+   return ( 
+    <div className="relative h-screen flex items-end w-full bg-gray-900">
       
       <Image
         src="/backgroundLogin.PNG"
         alt="bg"
         fill
-        sizes="100vw"
+        sizes="120vw"
         className="object-cover pb-40"
         priority
       />
 
     <div className="absolute inset-0 bg-gradient-to-t from-black/100 to-transparent"></div>
 
-      <div className="relative z-10 p-6 pb-3 text-center w-full max-w-md ">
+      <div className="relative z-10 p-6 pb-3 text-center w-full max-w-md">
         <h1 className="text-3xl font-bold leading-tight"> Faça login com Google</h1>
         <p className="text-gray-300  text-lg">para acessar seus agendamentos<br/>  e facilitar suas próximas visitas</p>
         <Button
