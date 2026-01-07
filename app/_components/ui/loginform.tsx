@@ -3,11 +3,8 @@
 import { signIn } from "next-auth/react";
 import { Button } from "./button";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 
-export default function LoginForms() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") ?? "https://belivio.com.br";
+export default function LoginForms({callbackUrl}: {callbackUrl: string}) {
 
     const handleLoginWithGoogle = async () => {
       await signIn("google", { callbackUrl });

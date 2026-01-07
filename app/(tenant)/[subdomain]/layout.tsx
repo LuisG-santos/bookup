@@ -26,7 +26,9 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
 
   if (!session){
     const headerlist = await headers();
-    const host = headerlist.get("host");
+    const rawHost = headerlist.get("host") ?? "";
+    const host = rawHost.replace(/^www\./, "");
+    
     const callbackUrl = `https://${host}$/`;
     redirect(`https://belivio.com.br/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
