@@ -35,23 +35,24 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ url, baseUrl }) {
-      
-      const base = baseUrl.replace("://www.", "://");
+      const normalize = (s: string) => s.replace("://www.", "://");
+
+      const base = normalize(baseUrl);
 
       if (url.startsWith("/")) return `${base}${url}`;
 
-      const u = new URL(url);
-      const host = u.hostname.replace(/^www\./, "");
+      try {
+        const u = new URL(normalize(url));
 
-      // permite voltar para root e tenants (1 nível)
-      if (host === "belivio.com.br" || host.endsWith(".belivio.com.br")) {
-        u.protocol = "https:"; 
-        u.hostname = host;     
-        return u.toString();
-      }
+        const host = u.hostname.toLowerCase();
+        const isBelivio =
+          host === "belivio.com.br" || host.endsWith(".belivio.com.br");
+
+        if (isBelivio) return u.toString();
+      } catch { }
 
       return base;
-    },
+    }
   },
 
   cookies: {
