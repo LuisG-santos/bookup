@@ -19,17 +19,28 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-  async session({ session, token }) {
-    if (session?.user && token?.id) {
-      session.user.id = token.id;
+    async session({ session, token }) {
+      if (session?.user && token?.id) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    async redirect({ url, baseUrl }) {
+
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+
+      const u = new URL(url);
+      if (u.hostname === "belivio.com.br") return url;
+      if (u.hostname.endsWith(".belivio.com.br")) return url;
+
+      return baseUrl;
     }
-    return session;
-  },
-  async jwt({ token, user }) {
-    if (user) {
-      token.id = user.id;
-    }
-    return token;
-  },
-}
+  }
 };
