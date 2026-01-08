@@ -18,7 +18,13 @@ export default function LogOutButton({ className }: Props) {
 
     const handleLogout = async () => {
         setIsLoading(true);
-        await signOut({ callbackUrl: "https://belivio.com.br/login" });
+        
+        const host = window.location.host.replace(/^www\./, "");
+        const callbackUrl = `https://${host}/`;
+
+        const loginUrl = `https://belivio.com.br/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+
+        await signOut({ callbackUrl: loginUrl });
     }
 
     return (
