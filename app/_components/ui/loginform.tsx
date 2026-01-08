@@ -26,7 +26,7 @@ type loginFormProps = {
 
 export default function LoginForms({callbackUrl}: loginFormProps) {
   const safe = safeCallBack(callbackUrl);
-
+  console.log("Safe Callback URL:", safe);
   async function handleLoginWithGoogle(){
     await signIn("google", { callbackUrl: safe });
   }
