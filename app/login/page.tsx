@@ -3,8 +3,15 @@ import LoginClient from "./LoginClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage({ searchParams }: { searchParams: {callbackUrl?: string} }) {
- const callbackUrl = searchParams.callbackUrl ?? "https://belivio.com.br/";
+type PageProps = {
+  searchParams: Promise<{ callbackUrl: string }>;
+};
+
+export default async function LoginPage({ searchParams }: PageProps) {
+  
+  const sp = await searchParams;
+  const callbackUrl = sp.callbackUrl;
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-primary" >
       <LoginClient callbackUrl={callbackUrl} />

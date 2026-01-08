@@ -3,12 +3,33 @@
 import { signIn } from "next-auth/react";
 import { Button } from "./button";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
-export default function LoginForms({callbackUrl}: {callbackUrl: string}) {
+const ROOT = "belivio.com.br"
 
-    const handleLoginWithGoogle = async () => {
-      await signIn("google", { callbackUrl });
-    };
+function safeCallBack(raw: string | null){
+  if(!raw) return `https://${ROOT}/`;
+
+  try{
+    const u = new URL(raw);
+    const host = u.hostname.replace(/^www\./, "");
+    if (host === ROOT || host.endsWith(`.${ROOT}`)) return u.toString();
+    return `https://${ROOT}/`;
+  } catch{
+    return `https://${ROOT}/`;
+  }
+}
+
+type loginFormProps = {
+  callbackUrl: string;
+}
+
+export default function LoginForms({callbackUrl}: loginFormProps) {
+  const safe = safeCallBack(callbackUrl);
+
+  async function handleLoginWithGoogle(){
+    await signIn("google", { callbackUrl: safe });
+  }
     
    return ( 
     <div className="relative h-screen flex items-end w-full bg-gray-900">
