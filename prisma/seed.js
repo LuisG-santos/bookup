@@ -9,20 +9,20 @@ async function main() {
   // 1) Commerce (tenant)
   const commerce = await prisma.commerce.create({
     data: {
-      name: 'Belivio Barber Test',
-      address: 'Rua Teste, 123',
+      name: 'Gus Dev Barbearia',
+      address: 'Rua Teste, 234 - Centro, Teste City - SP',
       phones: ["+55 18 99179-0722"],
       instagram: '@guustavo.dev',
       description: 'Barbearia de teste para desenvolvimento Belivio.',
       imageURL: 'https://belivio.b-cdn.net/Bronks%20Barber/logo.svg',
 
-      primaryColor: '#171616',
-      secondaryColor: '#474343',
-      backgroundColor: '#181818',
+      primaryColor: '#A3A2A2',
+      secondaryColor: '#2E2E2E',
+      backgroundColor: '#F2F2F2',
 
-      heroSubtitle: 'Na Belivio Barber , a vibe é leve e o resultado é sério. Você chega normal e sai com autoestima batendo no topo. Barba, cabelo, ajustes finos...tudo no estilo que combina com você.A gente manda bem no clássico e no moderno sem frescura. Só vem, seu corte favorito te espera',
+      heroSubtitle: 'Na Gus Barber , a vibe é leve e o resultado é sério. Você chega normal e sai com autoestima batendo no topo. Barba, cabelo, ajustes finos...tudo no estilo que combina com você.A gente manda bem no clássico e no moderno sem frescura. Só vem, seu corte favorito te espera',
       heroTitle: 'Corte bom é aquele que te deixa com cara de "hoje eu to bonito"',
-      subdomain: 'beliviobarber',
+      subdomain: 'gusbarber',
     },
   })
 
@@ -32,7 +32,7 @@ async function main() {
   // 3) 6 serviços
   const servicesData = [
     {
-      name: 'Degrade',
+      name: 'Serviço 1',
       category: 'Cabelo',
       description: 'Corte completo com máquina e tesoura.',
       imageURL: 'https://placehold.co/150x150?text=Corte',
@@ -41,7 +41,7 @@ async function main() {
       commerceId: commerce.id,
     },
     {
-      name: 'Barba Completa',
+      name: 'Serviço 2',
       description: 'Aparar, alinhar e finalizar com toalha quente.',
       category: 'Barba',
       imageURL: 'https://placehold.co/150x150?text=Barba',
@@ -50,7 +50,7 @@ async function main() {
       commerceId: commerce.id,
     },
     {
-      name: 'Sobrancelha',
+      name: 'Serviço 3',
       category: 'Design',
       description: 'Design simples ou na navalha.',
       imageURL: 'https://placehold.co/150x150?text=Sobrancelha',
@@ -59,7 +59,7 @@ async function main() {
       commerceId: commerce.id,
     },
     {
-      name: 'Corte + Barba',
+      name: 'Serviço 4',
       category: 'Combo',
       description: 'Pacote completo com desconto.',
       imageURL: 'https://placehold.co/150x150?text=Combo',
@@ -68,7 +68,7 @@ async function main() {
       commerceId: commerce.id,
     },
     {
-      name: 'Hidratação Capilar',
+      name: 'Serviço 5',
       category: 'Tratamento',
       description: 'Tratamento rápido e eficaz.',
       imageURL: 'https://placehold.co/150x150?text=Hidratacao',
@@ -77,7 +77,7 @@ async function main() {
       commerceId: commerce.id,
     },
     {
-      name: 'Relaxamento / Química',
+      name: 'Serviço 6',
       category: 'Tratamento',
       description: 'Aplicação de química para redução de volume.',
       imageURL: 'https://placehold.co/150x150?text=Quimica',

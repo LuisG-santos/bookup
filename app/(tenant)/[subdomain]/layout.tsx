@@ -22,16 +22,6 @@ export const viewport: Viewport = {
 
 export default async function TenantLayout({ children, params }: TenantLayoutProps) {
   const { subdomain } = await params;
-  const session = await getServerSession(authOptions);
-
-  if (!session){
-    const headerlist = await headers();
-    const rawHost = headerlist.get("host") ?? "";
-    const host = rawHost.replace(/^www\./, "");
-
-    const callbackUrl = `https://${host}/`;
-    redirect(`https://belivio.com.br/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-  }
 
   const commerce = await db.commerce.findUnique({
     where: { subdomain },

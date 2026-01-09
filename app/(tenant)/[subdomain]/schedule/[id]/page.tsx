@@ -7,6 +7,10 @@ import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
 import SidebarSheet from "@/app/_components/sidebar-sheet";
 import Footer from "@/app/_components/ui/Footer"
 import { BookingCalendar } from "@/app/_components/ui/BookingCalendar"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 
 type PageProps = {
   params: Promise<{ subdomain: string; id: string }>
@@ -14,6 +18,15 @@ type PageProps = {
 
 const SchedulePage = async ({ params}: PageProps) => {
   const { subdomain, id } = await params;
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    const host = (await headers()).get("host")?.replace(/^www\./, "") ?? "";
+    const callbackUrl = `https://${host}/`;
+    redirect(`https://belivio.com.br/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    
+  }
+
   const service = await db.services.findUnique({
     where: { id },
     select: {
@@ -28,6 +41,8 @@ const SchedulePage = async ({ params}: PageProps) => {
   if (!service) {
     return notFound();
   }
+
+
 
   const isOwner = false;
 

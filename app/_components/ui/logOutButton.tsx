@@ -44,8 +44,8 @@ export default function LogOutButton({ className }: Props) {
 
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-white">Sair da conta</DialogTitle>
-                    <DialogDescription className="text-white">
+                    <DialogTitle className="text-[var(--text-on-primary)]">Sair da conta</DialogTitle>
+                    <DialogDescription className="text-[var(--text-on-primary)]">
                         Tem certeza que deseja sair da sua conta?
                     </DialogDescription>
                 </DialogHeader>

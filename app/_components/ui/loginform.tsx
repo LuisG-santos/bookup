@@ -3,7 +3,6 @@
 import { signIn } from "next-auth/react";
 import { Button } from "./button";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 
 const ROOT = "belivio.com.br"
 

@@ -5,6 +5,8 @@ import { BookingStatus, Prisma } from "@prisma/client";
 import { addMinutes} from "date-fns";
 import { revalidatePath } from "next/cache";
 import {toZonedTime ,fromZonedTime } from "date-fns-tz";
+import { authOptions } from "../auth/[...nextauth]/authOptions";
+import { getServerSession } from "next-auth";
 
 function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
   return aStart < bEnd && aEnd > bStart;
@@ -12,11 +14,18 @@ function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { userId, serviceId, commerceId, date } = body ?? {};
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
     const TZ = "America/Sao_Paulo";
 
-    if (!userId || !serviceId || !commerceId || !date) {
+    if (!userId) {
+      return NextResponse.json({ error: "Dados obrigatórios ausentes." }, { status: 400 });
+    }
+
+    const body = await req.json();
+    const { serviceId, commerceId, date } = body;
+
+    if (!serviceId || !commerceId || !date) {
       return NextResponse.json({ error: "Dados obrigatórios ausentes." }, { status: 400 });
     }
 
@@ -129,6 +138,16 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       );
     }
+
+     await db.commerceMembership.upsert({
+      where: {
+        userId_commerceId: { userId, commerceId }
+      },
+      update: {},
+      create: {
+        userId, commerceId, role: "CLIENT"
+      }
+    });
 
     // CREATE: aqui o banco deve impedir corrida via EXCLUDE constraint (recomendado)
     const booking = await db.booking.create({
