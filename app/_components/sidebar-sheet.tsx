@@ -9,7 +9,7 @@ import {
 } from "./ui/sheet";
 
 import Link from "next/link";
-import { CalendarIcon, HomeIcon, CrownIcon, Sheet } from "lucide-react";
+import { CalendarIcon, HomeIcon, CrownIcon} from "lucide-react";
 import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -24,8 +24,15 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
 
-    const base = subdomain ? `/${subdomain}` : '/';
-    const loginPage = subdomain ? `/${subdomain}/login` : '/login';
+    const base = typeof window !== "undefined"
+        ? window.location.hostname.endsWith("belivio.com.br")
+            ?"/"
+            : subdomain ? `/${subdomain}` : "/"
+        :"/";
+
+    const loginPage = typeof window !== 'undefined' 
+    ? `https://belivio.com.br/login?callbackUrl=${encodeURIComponent(window.location.origin + "/")}` 
+    : "https://belivio.com.br/login";
     const { data, status } = useSession();
     const isAuthenticated = status === "authenticated" && !!data?.user;
     
@@ -104,11 +111,11 @@ export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProp
                 <SheetFooter>
 
                     <SheetClose asChild>
-                        <Link href={loginPage}>
+                        <a href={loginPage}>
                             <Button variant="outline" className="w-full">
                                 Login
                             </Button>
-                        </Link>
+                        </a>
                     </SheetClose>
                 </SheetFooter>
             ) : null
