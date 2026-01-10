@@ -63,7 +63,7 @@ export default function LogOutButton({ className }: Props) {
 
                         <Button
                             size="sm"
-                            className="w-28 px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
+                            className="w-28 px-2 py-2 text-white text-xs sm:px-4 sm:py-3 sm:text-base bg-red-900 hover:bg-red-800"
                             onClick={handleLogout}
                             disabled={isLoading}
                         >

@@ -27,7 +27,7 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
         
         router.push(`${basePath}/schedule/${services.id}`);
     }
-    
+
     return (
 
         <Card className="min-w-[170px] p-0 rounded-2xl h-full bg-primary shadow-[0_3px_8px_rgba(0,0,0,.55)]">
@@ -54,7 +54,7 @@ const ServicesGrid = ({ services, basePath }: ServicesGridProps) => {
                         <Button
                             size="sm"
                             onClick={handleVerifyUser}
-                            className="w-full px-2 py-2 text-[var(--text-on-primary)] text-xs sm:px-4 sm:py-3 sm:text-base bg-secondary hover:bg-zinc-700"
+                            className="w-full px-2 py-2 text-[var(--text-on-primary)] text-xs sm:px-4 sm:py-3 sm:text-base bg-secondary hover:bg-primary/90"
                         >
                             Agendar
                         </Button>

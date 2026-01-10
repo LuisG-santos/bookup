@@ -23,12 +23,7 @@ type SidebarSheetProps = {
 export default function SidebarSheet({ commerceName, isOwner }: SidebarSheetProps) {
     const params = useParams<{ subdomain: string }>();
     const subdomain = params?.subdomain;
-
-    const base = typeof window !== "undefined"
-        ? window.location.hostname.endsWith("belivio.com.br")
-            ?"/"
-            : subdomain ? `/${subdomain}` : "/"
-        :"/";
+    const base = `/${subdomain}`;
 
     const loginPage = typeof window !== 'undefined' 
     ? `https://belivio.com.br/login?callbackUrl=${encodeURIComponent(window.location.origin + "/")}` 
